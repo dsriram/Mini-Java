@@ -140,7 +140,6 @@ type
     : INT '[' ']'
     | BOOLEAN
     | INT
-    | ID
     ;
 
 type_id
