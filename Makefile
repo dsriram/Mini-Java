@@ -1,4 +1,4 @@
-all: compile run
+all: run
 
 compile: src/mini-java.jison
 	cd src && \
@@ -6,4 +6,4 @@ compile: src/mini-java.jison
 	
 run:
 	cd src && \
-	node mini-java.js test-case
+	coffee run-parser.coffee
