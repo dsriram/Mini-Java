@@ -1,9 +1,15 @@
-class MyClass {
-  public static void main(String[] args) {
-    if (true)
-    {
-      System.out.println(this);
+class Factorial {
+    public static void main(String[] args) {
+        System.out.println(new Fact().ComputeFac(10));
     }
-    else nothing
-  }
+}
+class Fact extends AnotherClass {
+    public int ComputeFac(int num) {
+        int num_aux;
+        if (num < 1)
+            num_aux = 1;
+        else 
+            num_aux = num * (this.ComputeFac(num-1));
+        return num_aux;
+    }
 }

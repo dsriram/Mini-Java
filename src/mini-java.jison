@@ -5,7 +5,7 @@
 %lex
 
 digit                 [0-9]
-id                    [a-zA-Z][a-zA-Z0-9]*
+id                    [a-zA-Z][a-zA-Z0-9_]*
 
 %%
 
@@ -77,7 +77,7 @@ id                    [a-zA-Z][a-zA-Z0-9]*
 %% /* language grammar */
 
 goal
-    : main_class multiple_class_declarations EOF
+    : main_class class_decl_list EOF
     ;
 
 
@@ -103,12 +103,12 @@ statement
 
 
 expression_list
-    : expression comma_expression_list
+    : expression expression_comma_list
     |
     ;
 
-comma_expression_list
-    : ',' expression comma_expression_list
+expression_comma_list
+    : ',' expression expression_comma_list
     |
     ;
 
@@ -136,7 +136,6 @@ expression
 
 
 
-
 type
     : INT '[' ']'
     | BOOLEAN
@@ -144,21 +143,68 @@ type
     | ID
     ;
 
+type_id
+    : type ID
+    ;
+
+type_id_list
+    : type_id type_id_comma_list
+    |
+    ;
+
+type_id_comma_list
+    : ',' type_id type_id_comma_list
+    |
+    ;
+
+
+
+
+var_decl_list
+    : var_decl var_decl_list
+    |
+    ;
+
 var_decl
     : type ID ';'
     ;
+
+
+
 
 main_class
     : CLASS ID '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' ID ')' '{' statement_list '}' '}'
     ;
 
-multiple_class_declarations
-    : 
+
+
+
+
+class_decl_list
+    : class_decl class_decl_list
+    |
+    ;
+
+class_decl
+    : CLASS ID class_extension_signature '{' var_decl_list method_decl_list '}'
+    ;
+
+class_extension_signature
+    : EXTENDS ID 
+    |
     ;
 
 
 
 
+method_decl_list
+    : method_decl method_decl_list
+    |
+    ;
+
+method_decl
+    : PUBLIC type ID '(' type_id_list ')' '{' var_decl_list statement_list RETURN expression ';' '}'
+    ;
 
 
 
