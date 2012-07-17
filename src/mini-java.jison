@@ -95,7 +95,7 @@ initializer
             count = 0;
             log = console.log;
             console.log = function(message) {
-                log(count + "  " + (message?message:" "));
+                log(count + " >|   " + (message?message:" "));
                 count++;
             };
         }
@@ -230,7 +230,7 @@ expression_list /* == ( expression (',' expression)* )* */
             console.log();
 
             var obj = {};
-            obj.desc = "(" + $expression.desc + ") " + $expression_comma_list.desc;
+            obj.desc = "(" + $expression.desc + ")" + $expression_comma_list.desc;
 
             $$ = obj;
             
