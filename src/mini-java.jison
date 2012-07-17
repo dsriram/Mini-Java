@@ -62,7 +62,16 @@ id                    [a-zA-Z][a-zA-Z0-9]*
 /lex
 
 /* operator associations and precedence */
+/* TODO: FIXME!!! */
+%left '+' '-'
+%left '*' '/'
+%left '<'
+%left '['
+%left '.'
+%right '!'
+%right '&'
 
+/* start at goal */
 %start goal
 
 %% /* language grammar */
@@ -71,9 +80,8 @@ goal
     : main_class multiple_class_declarations EOF
     ;
 
-main_class
-    : CLASS ID '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' ID ')' '{' statement_list '}' '}'
-    ;
+
+
 
 statement_list /* == (statement)* */
     : statement statement_list
@@ -90,19 +98,29 @@ statement
     | NOTHING
     ;
 
-bool_math
-    : '&'
-    | '<'
-    | '+'
-    | '-'
-    | '*'
+
+
+
+
+expression_list
+    : expression comma_expression_list
+    |
+    ;
+
+comma_expression_list
+    : ',' expression comma_expression_list
+    |
     ;
 
 expression
-    : /*expression bool_math expression
+    : expression '&' expression 
+    | expression '<' expression 
+    | expression '+' expression 
+    | expression '-' expression 
+    | expression '*' expression 
     | expression '[' expression ']'
     | expression '.' LENGTH
-    /* Expression "." Identifier "(" ( Expression ( "," Expression )* )? ")" */
+    | expression '.' ID '(' expression_list ')'
     | INTEGER_LETERAL
     | TRUE
     | FALSE
@@ -116,9 +134,36 @@ expression
 
 
 
-multiple_class_declarations
-    :
+
+
+
+type
+    : INT '[' ']'
+    | BOOLEAN
+    | INT
+    | ID
     ;
+
+var_decl
+    : type ID ';'
+    ;
+
+main_class
+    : CLASS ID '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' ID ')' '{' statement_list '}' '}'
+    ;
+
+multiple_class_declarations
+    : 
+    ;
+
+
+
+
+
+
+
+
+
 
 
 
