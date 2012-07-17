@@ -9,16 +9,55 @@ id                    [a-zA-Z][a-zA-Z0-9]*
 
 %%
 
+\s+                     /* skip whitespaces */
+"class"                 return 'CLASS'
+"extends"               return 'EXTENDS'
+"public"                return 'PUBLIC'
+"static"                return 'STATIC'
+"void"                  return 'VOID'
+"main"                  return 'MAIN'
+"return"                return 'RETURN'
+"this"                  return 'THIS'
+"new"                   return 'NEW'
+"length"                return 'LENGTH'
+"System.out.println"    return 'SYSOUT'
 
-\s+                   /*return 'SEP'*/
-"class"               return 'CLASS'
-"var"                 return 'VAR'
-{id}                  return 'ID'
-"{"                   return '{'
-"}"                   return '}'
-";"                   return ';'
-<<EOF>>               return 'EOF'
-.                     return 'INVALID'
+"if"                    return 'IF'
+"else"                  return 'ELSE'
+"while"                 return 'WHILE'
+
+"boolean"               return 'BOOLEAN'
+"int"                   return 'INT'
+"String"                return 'STRING'
+
+"true"                  return 'TRUE'
+"false"                 return 'FALSE'
+"nothing"               return 'NOTHING'
+
+{id}                    return 'ID'
+{digit}+                return 'INTEGER_LETERAL';
+
+"{"                     return '{'
+"}"                     return '}'
+"("                     return '('
+")"                     return ')'
+"["                     return '['
+"]"                     return ']'
+
+";"                     return ';'
+","                     return ','
+"."                     return '.'
+
+"="                     return '='
+"<"                     return '<'
+"+"                     return '+'
+"-"                     return '-'
+"*"                     return '*'
+"&&"                    return '&'
+"!"                     return '!'
+
+<<EOF>>                 return 'EOF'
+.                       return 'INVALID'
 
 /lex
 
@@ -29,51 +68,57 @@ id                    [a-zA-Z][a-zA-Z0-9]*
 %% /* language grammar */
 
 goal
-    : class EOF
-        {console.log(":)");}
+    : main_class multiple_class_declarations EOF
     ;
 
-class
-    : CLASS ID '{' var_list '}'
-        {
-            console.log($var_list)
-        }
+main_class
+    : CLASS ID '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' ID ')' '{' statement_list '}' '}'
     ;
 
-var_list
-    : var_decl var_list 
-        {
-            $$ = new Array();
-            $$[0] = $var_decl;
-            if ($var_list)
-                for (var i=0; i<$var_list.length; i++)
-                    $$[i+1] = $var_list[i]
-        }
+statement_list /* == (statement)* */
+    : statement statement_list
     |
-        {
-            $$ = null;
-        }
+    ;
+
+statement
+    : '{' statement_list '}'
+    | IF '(' expression ')' statement ELSE statement
+    | WHILE '(' expression ')' statement
+    | SYSOUT '(' expression ')' ';'
+    | ID '=' expression ';'
+    | ID '[' expression ']' '=' expression ';'
+    | NOTHING
+    ;
+
+bool_math
+    : '&'
+    | '<'
+    | '+'
+    | '-'
+    | '*'
+    ;
+
+expression
+    : /*expression bool_math expression
+    | expression '[' expression ']'
+    | expression '.' LENGTH
+    /* Expression "." Identifier "(" ( Expression ( "," Expression )* )? ")" */
+    | INTEGER_LETERAL
+    | TRUE
+    | FALSE
+    | ID
+    | THIS
+    | NEW INT '[' expression ']'
+    | NEW ID '(' ')'
+    | '!' expression
+    | '(' expression ')'
     ;
 
 
-var_decl
-    : VAR ID ';'
-        {
-            $$ = $ID;
-            console.log("=====>"+$ID)
-        }
+
+multiple_class_declarations
+    :
     ;
-
-
-
-
-
-
-
-
-
-
-
 
 
 
