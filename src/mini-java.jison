@@ -139,9 +139,6 @@ statement
     ;
 
 
-
-
-
 expression_list /* == ( expression (',' expression)* )* */
     : expression expression_comma_list
         {
@@ -255,7 +252,7 @@ type
     ;
 
 type_id
-    : type ID
+    : ID ID | type ID
         {
             $$ = $type + " " + $ID;
         }
@@ -287,7 +284,7 @@ type_id_comma_list
 
 
 var_decl_list
-    : var_decl var_decl_list
+    : var_decl_list var_decl /* used left recursion to fix shift/reduce conflict! */
         {
 
         }
@@ -298,7 +295,7 @@ var_decl_list
     ;
 
 var_decl
-    : type ID ';'
+    : type_id ';'
         {
 
         }
@@ -365,7 +362,7 @@ method_decl_list
     ;
 
 method_decl
-    : PUBLIC type ID '(' type_id_list ')' '{' var_decl_list statement_list RETURN expression ';' '}'
+    : PUBLIC type_id '(' type_id_list ')' '{' var_decl_list statement_list RETURN expression ';' '}'
         {
 
         }
