@@ -15,4 +15,4 @@ parser = new Parser grammar, {type:types['LALR(1)']}
 
 parserSource = parser.generate()
 
-parser.parse fs.readFileSync 'test-case', 'UTF8'
+parser.parse fs.readFileSync 'test-case.java', 'UTF8'
