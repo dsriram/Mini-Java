@@ -8,6 +8,8 @@ class Fact extends AnotherClass {
     public int ComputeFac(int num) {
         int num_aux;
         booleana yy_var;
+        ff = new int[10];
+        fg = true[true];
         if (num < 1)
             num_aux = 1;
         else 
