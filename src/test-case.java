@@ -1,4 +1,4 @@
-.class Factorial {
+class Factorial {
     public static void main(String[] args) {
         System.out.println(new Fact().ComputeFac(10));
     }

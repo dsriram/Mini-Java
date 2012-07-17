@@ -18,4 +18,4 @@ funfun = ()->
 
 parserSource = parser.generate()
 
-parser.parse fs.readFileSync 'test-case.java', 'UTF8'
+parser.parse '.' + (fs.readFileSync 'test-case.java', 'UTF8')
