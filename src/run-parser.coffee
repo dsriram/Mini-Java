@@ -13,6 +13,9 @@ types =
 
 parser = new Parser grammar, {type:types['LALR(1)']}
 
+funfun = ()->
+  console.log 'hello'
+
 parserSource = parser.generate()
 
 parser.parse fs.readFileSync 'test-case.java', 'UTF8'

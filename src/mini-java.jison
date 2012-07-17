@@ -81,9 +81,25 @@ id                    [a-zA-Z][a-zA-Z0-9_]*
 
 
 /* start at goal */
-%start goal
+%start start
 
 %% /* language grammar */
+
+start
+    : initializer goal
+    ;
+
+initializer
+    : '.'
+        {
+            count = 0;
+            log = console.log;
+            console.log = function(message) {
+                log(count + "  " + (message?message:" "));
+                count++;
+            };
+        }
+    ;
 
 goal
     : main_class class_decl_list EOF
@@ -94,8 +110,8 @@ goal
             console.log();
             
             var obj = {};
-            obj.desc = $main_class.desc + " " + $class_decl_list.desc;
 
+            obj.desc = $main_class.desc + " " + $class_decl_list.desc;
             $$ = obj;
         }
     ;
@@ -506,10 +522,9 @@ type_id
     : ID ID 
         {
             console.log("32) type_id ::= ID ID");
-            console.log("                 \\_|___ " + $ID1);
-            console.log("                    \\_____ " + $ID2);
+            console.log("                 \\_|____ " + $ID1);
+            console.log("                    \\___ " + $ID2);
             console.log();
-
 
             var obj = {};
             obj.desc = $ID + " " + $ID;
@@ -519,8 +534,8 @@ type_id
     | type ID
         {
             console.log("33) type_id ::= type ID");
-            console.log("                 \\___|__ " + $type);
-            console.log("                      \\_____ " + $ID);
+            console.log("                 \\___|____ " + $type.desc);
+            console.log("                      \\___ " + $ID);
             console.log();
 
 
