@@ -144,6 +144,7 @@ type
 
 type_id
     : type ID
+    | ID ID /* fixed shift/reduce conflict introduced by MethodDeclaration::= ... ( VarDeclaration )* ( Statement )* ... */
     ;
 
 type_id_list
@@ -204,9 +205,6 @@ method_decl_list
 method_decl
     : PUBLIC type ID '(' type_id_list ')' '{' var_decl_list statement_list RETURN expression ';' '}'
     ;
-
-
-
 
 
 
