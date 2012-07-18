@@ -93,10 +93,12 @@ initializer
     : '.'
         {
             log = console.log;
+            
             INCLUDE("node");
-            INCLUDE("underscore");
-
             Node = LocalNode;
+
+            INCLUDE("underscore");
+            
             root = new Node("root", "ROOT_NODE");
         }
     ;
@@ -109,10 +111,10 @@ goal
             log("                     \\___ " + $class_decl_list.desc);
             log();
 
-            var obj = {};
+            var node = new Node ("goal", 1);
 
-            obj.desc = $main_class.desc + " " + $class_decl_list.desc;
-            $$ = obj;
+            node.desc = $main_class.desc + " " + $class_decl_list.desc;
+            $$ = node;
         }
     ;
 
@@ -126,20 +128,20 @@ statement_list /* == (statement)* */
             log("                        \\___ " + $statement.desc);
             log();
             
-            var obj = {};
-            obj.desc = $statement.desc + $statement_list.desc;
+            var node = new Node("statement_list", 1);
+            node.desc = $statement.desc + $statement_list.desc;
 
-            $$ = obj;
+            $$ = node;
         }
     |
         {
             log("1)  statement_list ::= ");
             log();
             
-            var obj = {};
-            obj.desc = "";
+            var node = new Node("statement_list", 2);
+            node.desc = "";
 
-            $$ = obj;
+            $$ = node;
             
         }
     ;
@@ -151,10 +153,10 @@ statement
             log("                       \\___ " + $statement_list.desc);
             log();
             
-            var obj = {};
-            obj.desc = "{ " + $statement_list.desc + " }";
+            var node = new Node("statement", 1);
+            node.desc = "{ " + $statement_list.desc + " }";
 
-            $$ = obj;
+            $$ = node;
             
         }
     | IF '(' expression ')' statement ELSE statement
@@ -165,10 +167,10 @@ statement
             log("                                                         \\___ " + $statement2.desc);
             log();
 
-            var obj = {};
-            obj.desc = "IF (" + $expression.desc + " ) " + $statement1.desc + " ELSE " + $statement2.desc;
+            var node = new Node("statement", 2);
+            node.desc = "IF (" + $expression.desc + " ) " + $statement1.desc + " ELSE " + $statement2.desc;
 
-            $$ = obj;
+            $$ = node;
         }
     | WHILE '(' expression ')' statement
         {
@@ -176,10 +178,10 @@ statement
             log("                             \\_____________|____ " + $expression.desc);
             log();
             
-            var obj = {};
-            obj.desc = "WHILE ( " + $expression.desc + " ) " + $statement.desc;
+            var node = new Node("statement", 3);
+            node.desc = "WHILE ( " + $expression.desc + " ) " + $statement.desc;
 
-            $$ = obj;
+            $$ = node;
         }
     | SYSOUT '(' expression ')' ';'
         {
@@ -187,10 +189,10 @@ statement
             log("                              \\____ " + $expression.desc);
             log();
 
-            var obj = {};
-            obj.desc = "SYSO ( " + $expression.desc + " ) ;";
+            var node = new Node("statement", 4);
+            node.desc = "SYSO ( " + $expression.desc + " ) ;";
 
-            $$ = obj;
+            $$ = node;
         }
     | ID '=' expression ';'
         {
@@ -199,10 +201,10 @@ statement
             log("                           \\__ " + $expression.desc);
             log();
             
-            var obj = {};
-            obj.desc = $ID + " = (" + $expression.desc + ")";
+            var node = new Node("statement", 5);
+            node.desc = $ID + " = (" + $expression.desc + ")";
 
-            $$ = obj;
+            $$ = node;
             
         }
     | ID '[' expression ']' '=' expression ';'
@@ -213,10 +215,10 @@ statement
             log("                                             \\_ " + $expression2.desc);
             log();
 
-            var obj = {};
-            obj.desc = $ID + "[ (" + $expression1.desc + ") ] = (" + $expression2.desc + ");";
+            var node = new Node("statement", 6);
+            node.desc = $ID + "[ (" + $expression1.desc + ") ] = (" + $expression2.desc + ");";
 
-            $$ = obj;
+            $$ = node;
             
         }
     ;
@@ -229,10 +231,10 @@ expression_list /* == ( expression (',' expression)* )* */
             log("                          \\___ " + $expression.desc);
             log();
 
-            var obj = {};
-            obj.desc = "(" + $expression.desc + ")" + $expression_comma_list.desc;
+            var node = new Node("expression_list", 1);
+            node.desc = "(" + $expression.desc + ")" + $expression_comma_list.desc;
 
-            $$ = obj;
+            $$ = node;
             
         }
     |
@@ -240,10 +242,10 @@ expression_list /* == ( expression (',' expression)* )* */
             log("9)  expression_list ::= ");
             log();
 
-            var obj = {};
-            obj.desc = "";
+            var node = new Node("expression_list", 2);
+            node.desc = "";
 
-            $$ = obj;
+            $$ = node;
             
         }
     ;
@@ -255,10 +257,10 @@ expression_comma_list
             log("                                   \\___ " + $expression.desc);
             log();
 
-            var obj = {};
-            obj.desc = ", (" + $expression.desc + ")" + $expression_comma_list.desc;
+            var node = new Node("expression_comma_list", 1);
+            node.desc = ", (" + $expression.desc + ")" + $expression_comma_list.desc;
 
-            $$ = obj;
+            $$ = node;
             
         }
     |
@@ -266,10 +268,10 @@ expression_comma_list
             log("11) expression_comma_list ::= ");
             log();
 
-            var obj = {};
-            obj.desc = "";
+            var node = new Node("expression_comma_list", 2);
+            node.desc = "";
 
-            $$ = obj;
+            $$ = node;
             
         }
     ;
@@ -282,10 +284,10 @@ expression
             log("                                   \\___ " + $expression2.desc);
             log();
 
-            var obj = {};
-            obj.desc = "(" + $expression1.desc + ") & (" + $expression2.desc + ")";
+            var node = new Node("expression", 1);
+            node.desc = "(" + $expression1.desc + ") & (" + $expression2.desc + ")";
 
-            $$ = obj;
+            $$ = node;
         }
     | expression '<' expression 
         {
@@ -294,10 +296,10 @@ expression
             log("                                   \\___ " + $expression2.desc);
             log();
 
-            var obj = {};
-            obj.desc = "(" + $expression1.desc + ") < (" + $expression2.desc + ")";
+            var node = new Node("expression", 2);
+            node.desc = "(" + $expression1.desc + ") < (" + $expression2.desc + ")";
 
-            $$ = obj;
+            $$ = node;
             
         }
     | expression '+' expression 
@@ -307,10 +309,10 @@ expression
             log("                                   \\___ " + $expression2.desc);
             log();
 
-            var obj = {};
-            obj.desc = "(" + $expression1.desc + ") + (" + $expression2.desc + ")";
+            var node = new Node("expression", 3);
+            node.desc = "(" + $expression1.desc + ") + (" + $expression2.desc + ")";
 
-            $$ = obj;
+            $$ = node;
             
         }
     | expression '-' expression 
@@ -320,10 +322,10 @@ expression
             log("                                   \\___ " + $expression2.desc);
             log();
 
-            var obj = {};
-            obj.desc = "(" + $expression1.desc + ") - (" + $expression2.desc + ")";
+            var node = new Node("expression", 4);
+            node.desc = "(" + $expression1.desc + ") - (" + $expression2.desc + ")";
 
-            $$ = obj;
+            $$ = node;
             
         }
     | expression '*' expression 
@@ -333,10 +335,10 @@ expression
             log("                                   \\___ " + $expression2.desc);
             log();
 
-            var obj = {};
-            obj.desc = "(" + $expression1.desc + ") * (" + $expression2.desc + ")";
+            var node = new Node("expression", 5);
+            node.desc = "(" + $expression1.desc + ") * (" + $expression2.desc + ")";
 
-            $$ = obj;
+            $$ = node;
             
         }
     | expression '[' expression ']'
@@ -346,10 +348,10 @@ expression
             log("                                   \\___ " + $expression2.desc);
             log();
 
-            var obj = {};
-            obj.desc = "(" + $expression1.desc + ")" + " [ (" + $expression2.desc + ") ]";
+            var node = new Node("expression", 6);
+            node.desc = "(" + $expression1.desc + ")" + " [ (" + $expression2.desc + ") ]";
 
-            $$ = obj;
+            $$ = node;
             
         }
     | expression '.' LENGTH
@@ -358,10 +360,10 @@ expression
             log("                    \\_______ " + $expression.desc);
             log();
 
-            var obj = {};
-            obj.desc = "(" + $expression.desc + ").LENGTH ";
+            var node = new Node("expression", 7);
+            node.desc = "(" + $expression.desc + ").LENGTH ";
 
-            $$ = obj;
+            $$ = node;
             
         }
     | expression '.' ID '(' expression_list ')'
@@ -371,10 +373,10 @@ expression
             log("                                   \\__ " + $ID);
             log();
 
-            var obj = {};
-            obj.desc = "(" + $expression.desc + ")." + $ID + "(" + $expression_list.desc + ")";
+            var node = new Node("expression", 8);
+            node.desc = "(" + $expression.desc + ")." + $ID + "(" + $expression_list.desc + ")";
 
-            $$ = obj;
+            $$ = node;
         }
     | INTEGER_LETERAL
         {
@@ -382,10 +384,10 @@ expression
             log("                     \\___ " + $INTEGER_LETERAL);
             log();
 
-            var obj = {};
-            obj.desc = $INTEGER_LETERAL;
+            var node = new Node("expression", 9);
+            node.desc = $INTEGER_LETERAL;
 
-            $$ = obj;
+            $$ = node;
             
         }
     | TRUE
@@ -393,20 +395,20 @@ expression
             log("21) expression ::= TRUE");
             log();
 
-            var obj = {};
-            obj.desc = "true";
+            var node = new Node("expression", 10);
+            node.desc = "true";
 
-            $$ = obj;
+            $$ = node;
         }
     | FALSE
         {
             log("22) expression ::= FALSE");
             log();
             
-            var obj = {};
-            obj.desc = "false";
+            var node = new Node("expression", 11);
+            node.desc = "false";
 
-            $$ = obj;
+            $$ = node;
             
         }
     | ID
@@ -416,20 +418,20 @@ expression
             log();
             
 
-            var obj = {};
-            obj.desc = $ID;
+            var node = new Node("expression", 12);
+            node.desc = $ID;
 
-            $$ = obj;
+            $$ = node;
         }
     | THIS
         {
             log("24) expression ::= THIS");
             log();
 
-            var obj = {};
-            obj.desc = "this";
+            var node = new Node("expression", 13);
+            node.desc = "this";
 
-            $$ = obj;
+            $$ = node;
             
         }
     | NEW INT '[' expression ']'
@@ -439,10 +441,10 @@ expression
             log();
 
 
-            var obj = {};
-            obj.desc = "new int [" + $expression.desc + "]";
+            var node = new Node("expression", 14);
+            node.desc = "new int [" + $expression.desc + "]";
 
-            $$ = obj;
+            $$ = node;
             
         }
     | NEW ID '(' ')'
@@ -451,10 +453,10 @@ expression
             log("                        \\___ " + $ID);
             log();
 
-            var obj = {};
-            obj.desc = "new " + $ID + "()";
+            var node = new Node("expression", 15);
+            node.desc = "new " + $ID + "()";
 
-            $$ = obj;
+            $$ = node;
         }
     | '!' expression
         {
@@ -462,10 +464,10 @@ expression
             log("                        \\_______ " + $expression.desc);
             log();
 
-            var obj = {};
-            obj.desc = "! (" + $expression.desc + ")";
+            var node = new Node("expression", 16);
+            node.desc = "! (" + $expression.desc + ")";
 
-            $$ = obj;
+            $$ = node;
         }
     | '(' expression ')'
         {
@@ -473,10 +475,10 @@ expression
             log("                        \\_______ " + $expression.desc);
             log();
 
-            var obj = {};
-            obj.desc = "( " + $expression.desc + " )";
+            var node = new Node("expression", 17);
+            node.desc = "( " + $expression.desc + " )";
 
-            $$ = obj;
+            $$ = node;
 
         }
     ;
@@ -491,30 +493,30 @@ type
             log("29) type ::= INT '[' ']'");
             log();
 
-            var obj = {};
-            obj.desc = "int[]"
+            var node = new Node("type", 1);
+            node.desc = "int[]"
 
-            $$ = obj;
+            $$ = node;
         }
     | BOOLEAN
         {
             log("30) type ::= BOOLEAN");
             log();
 
-            var obj = {};
-            obj.desc = "boolean"
+            var node = new Node("type", 2);
+            node.desc = "boolean"
 
-            $$ = obj;
+            $$ = node;
         }
     | INT
         {
             log("31) type ::= INT");
             log();
 
-            var obj = {};
-            obj.desc = "int";
+            var node = new Node("type", 3);
+            node.desc = "int";
 
-            $$ = obj;
+            $$ = node;
         }
     ;
 
@@ -526,10 +528,10 @@ type_id
             log("                    \\___ " + $ID2);
             log();
 
-            var obj = {};
-            obj.desc = $ID + " " + $ID;
+            var node = new Node("type_id", 1);
+            node.desc = $ID + " " + $ID;
 
-            $$ = obj;
+            $$ = node;
         }
     | type ID
         {
@@ -539,10 +541,10 @@ type_id
             log();
 
 
-            var obj = {};
-            obj.desc = $type.desc + " " + $ID;
+            var node = new Node("type_id", 2);
+            node.desc = $type.desc + " " + $ID;
 
-            $$ = obj;
+            $$ = node;
         }
     ;
 
@@ -553,10 +555,10 @@ type_id_list
             log("                      \\___ " + $type_id.desc);
             log();
 
-            var obj = {};
-            obj.desc = $type_id.desc + " " + $type_id_comma_list.desc;
+            var node = new Node("type_id_list", 1);
+            node.desc = $type_id.desc + " " + $type_id_comma_list.desc;
 
-            $$ = obj;
+            $$ = node;
 
         }
     |
@@ -564,10 +566,10 @@ type_id_list
             log("35) type_id_list");
             log();
 
-            var obj = {};
-            obj.desc = "";
+            var node = new Node("type_id_list", 2);
+            node.desc = "";
 
-            $$ = obj;
+            $$ = node;
 
         }
     ;
@@ -580,10 +582,10 @@ type_id_comma_list
             log();
 
 
-            var obj = {};
-            obj.desc = ", " + $type_id.desc + $type_id_comma_list.desc
+            var node = new Node("type_id_comma_list", 1);
+            node.desc = ", " + $type_id.desc + $type_id_comma_list.desc
 
-            $$ = obj;
+            $$ = node;
 
         }
     |
@@ -592,10 +594,10 @@ type_id_comma_list
             log();
 
 
-            var obj = {};
-            obj.desc = "";
+            var node = new Node("type_id_comma_list", 2);
+            node.desc = "";
 
-            $$ = obj;
+            $$ = node;
 
         }
     ;
@@ -611,10 +613,10 @@ var_decl_list
             log();
 
 
-            var obj = {};
-            obj.desc = $var_decl_list.desc + " " + $var_decl.desc
+            var node = new Node("var_decl_list", 1);
+            node.desc = $var_decl_list.desc + " " + $var_decl.desc
 
-            $$ = obj;
+            $$ = node;
 
         }
     |
@@ -623,10 +625,10 @@ var_decl_list
             log();
 
 
-            var obj = {};
-            obj.desc = "";
+            var node = new Node("var_decl_list", 2);
+            node.desc = "";
 
-            $$ = obj;
+            $$ = node;
 
         }
     ;
@@ -639,10 +641,10 @@ var_decl
             log();
 
 
-            var obj = {};
-            obj.desc = $type_id.desc + ";";
+            var node = new Node("var_decl", 1);
+            node.desc = $type_id.desc + ";";
 
-            $$ = obj;
+            $$ = node;
 
         }
     ;
@@ -658,10 +660,10 @@ main_class
             log("                                                                            \\__ " + $ID2)
             log();
 
-            var obj = {};
-            obj.desc = "Main class: " + $ID;
+            var node = new Node("main_class", 1);
+            node.desc = "Main class: " + $ID;
 
-            $$ = obj;
+            $$ = node;
         }
     ;
 
@@ -676,10 +678,10 @@ class_decl_list
             log();
 
 
-            var obj = {};
-            obj.desc = $class_decl.desc + "        " + $class_decl_list.desc;
+            var node = new Node("class_decl_list", 1);
+            node.desc = $class_decl.desc + "        " + $class_decl_list.desc;
 
-            $$ = obj;
+            $$ = node;
 
         }
     |
@@ -688,10 +690,10 @@ class_decl_list
             log();
 
 
-            var obj = {};
-            obj.desc = "";
+            var node = new Node("class_decl_list", 2);
+            node.desc = "";
 
-            $$ = obj;
+            $$ = node;
 
         }
     ;
@@ -704,10 +706,10 @@ class_decl
             log();
 
 
-            var obj = {};
-            obj.desc = "Class: " + $ID;
+            var node = new Node("class_decl", 1);
+            node.desc = "Class: " + $ID;
 
-            $$ = obj;
+            $$ = node;
 
         }
     ;
@@ -720,10 +722,10 @@ class_extension_signature
             log();
 
 
-            var obj = {};
-            obj.desc = "extends " + $ID;
+            var node = new Node("class_extension_signature", 1);
+            node.desc = "extends " + $ID;
 
-            $$ = obj;
+            $$ = node;
 
         }
     |
@@ -732,10 +734,10 @@ class_extension_signature
             log();
 
 
-            var obj = {};
-            obj.desc = "";
+            var node = new Node("class_extension_signature", 2);
+            node.desc = "";
 
-            $$ = obj;
+            $$ = node;
 
         }
     ;
@@ -750,10 +752,10 @@ method_decl_list
             log();
 
 
-            var obj = {};
-            obj.desc = $method_decl.desc + " " + $method_decl_list.desc;
+            var node = new Node("method_decl_list", 1);
+            node.desc = $method_decl.desc + " " + $method_decl_list.desc;
 
-            $$ = obj;
+            $$ = node;
 
         }
     |
@@ -762,10 +764,10 @@ method_decl_list
             log();
 
 
-            var obj = {};
-            obj.desc = "";
+            var node = new Node("method_decl_list", 2);
+            node.desc = "";
 
-            $$ = obj;
+            $$ = node;
 
         }
     ;
@@ -777,10 +779,10 @@ method_decl
             log();
 
 
-            var obj = {};
-            obj.desc = "public " + $type_id.desc + "(" + $type_id_list.desc + ") { " + $var_decl_list.desc + "   " + $statement_list.desc + "   return (" + $expression.desc + ";}";
+            var node = new Node("method_decl", 1);
+            node.desc = "public " + $type_id.desc + "(" + $type_id_list.desc + ") { " + $var_decl_list.desc + "   " + $statement_list.desc + "   return (" + $expression.desc + ";}";
 
-            $$ = obj;
+            $$ = node;
 
         }
     ;

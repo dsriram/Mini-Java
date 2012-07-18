@@ -1,5 +1,5 @@
 class LocalNode
-  constructor: (@name, @type, @subtype) ->
+  constructor: (@type, @subtype) ->
     @parent = null
     @children = ['a']
     @scope = {}
