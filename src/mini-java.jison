@@ -96,7 +96,7 @@ initializer
             INCLUDE("underscore");
 
             Node = LocalNode;
-            root = new Node("root", "root");
+            root = new Node("root", "ROOT_NODE");
         }
     ;
 
