@@ -1,7 +1,7 @@
 all: compile run
 
 compile: 
-	coffee --bare --compile src/initialize.coffee
+	coffee --bare --compile src/node.coffee
 	
 run:
 	cd src && \
