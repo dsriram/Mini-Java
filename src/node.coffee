@@ -1,7 +1,8 @@
+# NODE
+# ==============================================================================
 class LocalNode
-  constructor: (@type, @subtype) ->
-    @parent = null
-    @children = ['a']
+  constructor: (@type, @subtype, @parent) ->
+    @children = []
     @scope = {}
     @desc = ""
 
@@ -9,6 +10,10 @@ class LocalNode
   # -------------------------
   addChild: (childNode) ->
     @children.push childNode
+    return @children
+  
+  setChildren: (childNodes) ->
+    @children = childNodes
     return @children
   
 
@@ -31,3 +36,26 @@ class LocalNode
   
   validate: ->
     return false;
+
+
+
+
+# LEAF
+# ==============================================================================
+class LocalLeaf extends LocalNode
+  constructor: (@type, @value, @parent) ->
+    @desc = "LEAF [" + type + " : " + value + "]"
+
+  print: ->
+    console.log @desc;
+  
+  validate: ->
+    return true;
+
+
+
+
+
+
+
+

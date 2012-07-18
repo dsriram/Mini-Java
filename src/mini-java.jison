@@ -1,4 +1,3 @@
-
 /* lexical grammar */
 %lex
 
@@ -96,6 +95,7 @@ initializer
             
             INCLUDE("node");
             Node = LocalNode;
+            Leaf = LocalLeaf;
 
             INCLUDE("underscore");
             
@@ -116,6 +116,19 @@ goal
             }
             
             node.desc = $main_class.desc + " " + $class_decl_list.desc;
+
+            // CHILDREN
+            var children;
+            
+            children[0] = $main_class;
+            children[0].parent = node;
+            
+            children[1] = $class_decl_list;
+            children[1].parent = node;
+//FIXME
+            node.setChildren(children);
+
+
             $$ = node;
         }}
     ;
@@ -147,6 +160,8 @@ statement_list /* == (statement)* */
             }
             
             node.desc = "";
+
+            // NO CHILDREN
 
             $$ = node;
             
@@ -538,6 +553,20 @@ expression
 
             node.desc = "new " + $ID + "()";
 
+            // CHILDREN
+            var children;
+            
+            children[0] = new Leaf("new", "new", node);
+            
+            children[1] = new Leaf("id", $ID, node);
+            
+            children[2] = new Leaf("(", "(", node);
+            
+            children[3] = new Leaf(")", ")", node);
+
+            node.setChildren(children);
+
+            
             $$ = node;
         }}
     | '!' expression
@@ -578,42 +607,15 @@ expression
 type
     : INT '[' ']'
         {{
-            var node = new Node("type", 1);
-            
-            node.print = function() {
-                log("29) type ::= INT '[' ']'");
-                log();
-            }
-
-            node.desc = "int[]";
-
-            $$ = node;
+            $$ = new Leaf("type", "int[]");
         }}
     | BOOLEAN
         {{
-            var node = new Node("type", 2);
-            
-            node.print = function() {
-                log("30) type ::= BOOLEAN");
-                log();
-            }
-
-            node.desc = "boolean";
-
-            $$ = node;
+            $$ = new Leaf("type", "boolean");
         }}
     | INT
         {{
-            var node = new Node("type", 3);
-            
-            node.print = function() {
-                log("31) type ::= INT");
-                log();
-            }
-
-            node.desc = "int";
-
-            $$ = node;
+            $$ = new Leaf("type", "int");
         }}
     ;
 
@@ -621,6 +623,7 @@ type_id
     : ID ID 
         {{
             var node = new Node("type_id", 1);
+            
             node.print = function() {
                 log("32) type_id ::= ID ID");
                 log("                 \\_|____ " + $ID1);
@@ -628,13 +631,24 @@ type_id
                 log();
             }
 
-            node.desc = $ID + " " + $ID;
+            node.desc = $ID1 + " " + $ID2;
 
+            // CHILDREN
+            var children;
+            
+            children[0] = new Leaf("type", $ID1, node);
+            
+            children[1] = new Leaf("id", $ID2, node);
+
+            node.setChildren(children);
+
+            
             $$ = node;
         }}
     | type ID
         {{
             var node = new Node("type_id", 2);
+            
             node.print = function() {
                 log("33) type_id ::= type ID");
                 log("                 \\___|____ " + $type.desc);
@@ -642,9 +656,19 @@ type_id
                 log();
             }
 
-
             node.desc = $type.desc + " " + $ID;
 
+            // CHILDREN
+            var children;
+            
+            children[0] = $type;
+            children[0].parent = node;
+            
+            children[1] = new Leaf("id", $ID, node);
+
+            node.setChildren(children);
+
+            
             $$ = node;
         }}
     ;
@@ -762,7 +786,6 @@ var_decl
                 log("                  \\___ " + $type_id.desc);
                 log();
             }
-
 
             node.desc = $type_id.desc + ";";
 
