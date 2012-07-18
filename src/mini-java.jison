@@ -92,7 +92,9 @@ start
 initializer
     : '.'
         {
-            INCLUDE("initialize.js");
+            INCLUDE("initialize");
+            INCLUDE("underscore");
+
             Node = LocalNode;
             root = new Node("root", "roor");
         }
@@ -105,7 +107,7 @@ goal
             console.log("          \\_________|____ " + $main_class.desc);
             console.log("                     \\___ " + $class_decl_list.desc);
             console.log();
-            
+            console.log(_);
             var obj = {};
 
             obj.desc = $main_class.desc + " " + $class_decl_list.desc;
@@ -395,6 +397,7 @@ expression
 
             var oo = new Node("true", "boolean");
             oo.getInfo("lool");
+
             oo.validate();
 
             $$ = obj;

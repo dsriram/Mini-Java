@@ -3,17 +3,28 @@ var LocalNode;
 
 LocalNode = (function() {
 
-  function LocalNode(name, type) {
+  function LocalNode(name, type, subtype) {
     this.name = name;
     this.type = type;
+    this.subtype = subtype;
+    this.parent = null;
+    this.children = [];
+    this.scope = {};
+    this.desc = "";
   }
+
+  LocalNode.prototype.addChild = function(childNode) {
+    this.children.push(childNode);
+    return this.children;
+  };
 
   LocalNode.prototype.getInfo = function(prefix) {
     return console.log(prefix + " " + this.type + " | " + this.name);
   };
 
   LocalNode.prototype.validate = function() {
-    return console.log('+++');
+    console.log("----++++----");
+    return false;
   };
 
   return LocalNode;

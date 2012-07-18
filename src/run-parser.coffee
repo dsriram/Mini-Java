@@ -2,7 +2,8 @@ fs          = require 'fs'
 Parser      = (require 'jison').Parser
 
 grammar = fs.readFileSync 'mini-java.jison', 'UTF8'
-grammar = grammar.replace 'INCLUDE("initialize.js");', (fs.readFileSync 'initialize.js', 'UTF8')
+grammar = grammar.replace 'INCLUDE("initialize");', (fs.readFileSync 'initialize.js', 'UTF8')
+grammar = grammar.replace 'INCLUDE("underscore");', (fs.readFileSync 'underscore.js', 'UTF8')
 
 types = 
   'LL(1)'   : 'll'
