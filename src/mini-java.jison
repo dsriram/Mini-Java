@@ -94,6 +94,7 @@ initializer
         {
             INCLUDE("initialize.js");
             Node = LocalNode;
+            root = new Node("root", "roor");
         }
     ;
 
