@@ -92,12 +92,19 @@ start
 initializer
     : '.'
         {
-            count = 0;
-            log = console.log;
-            console.log = function(message) {
-                log(count + " >|   " + (message?message:" "));
-                count++;
-            };
+            INCLUDE("initialize.js");
+            console.log = log;
+
+            function Node(name, type) {
+                this.name = name;
+                this.type = type;
+                this.getInfo = function(prefix) {
+                    log(prefix + " " + this.type + " | " + this.name);
+                }
+                this.validate = function() {
+                    log('-------');
+                }
+            }
         }
     ;
 
@@ -395,6 +402,10 @@ expression
 
             var obj = {};
             obj.desc = "true";
+
+            var oo = new Node("true", "boolean");
+            oo.getInfo("lool");
+            oo.validate();
 
             $$ = obj;
         }

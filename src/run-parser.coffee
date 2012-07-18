@@ -2,6 +2,7 @@ fs          = require 'fs'
 Parser      = (require 'jison').Parser
 
 grammar = fs.readFileSync 'mini-java.jison', 'UTF8'
+grammar = grammar.replace 'INCLUDE("initialize.js");', (fs.readFileSync 'initialize.js', 'UTF8')
 
 types = 
   'LL(1)'   : 'll'
@@ -13,9 +14,6 @@ types =
 
 parser = new Parser grammar, {type:types['LALR(1)']}
 
-funfun = ()->
-  console.log 'hello'
-
 parserSource = parser.generate()
 
-parser.parse '.' + (fs.readFileSync 'test-case.java', 'UTF8')
+parser.parse '.' + (fs.readFileSync 'test-case-2.java', 'UTF8')
