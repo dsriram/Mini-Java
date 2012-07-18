@@ -92,6 +92,7 @@ start
 initializer
     : '.'
         {
+            log = console.log;
             INCLUDE("node");
             INCLUDE("underscore");
 
@@ -103,10 +104,10 @@ initializer
 goal
     : main_class class_decl_list EOF
         {
-            console.log("goal ::= main_class class_decl_list EOF");
-            console.log("          \\_________|____ " + $main_class.desc);
-            console.log("                     \\___ " + $class_decl_list.desc);
-            console.log();
+            log("goal ::= main_class class_decl_list EOF");
+            log("          \\_________|____ " + $main_class.desc);
+            log("                     \\___ " + $class_decl_list.desc);
+            log();
 
             var obj = {};
 
@@ -121,9 +122,9 @@ goal
 statement_list /* == (statement)* */
     : statement statement_list
         {
-            console.log("0)  statement_list ::= statement statement_list");
-            console.log("                        \\___ " + $statement.desc);
-            console.log();
+            log("0)  statement_list ::= statement statement_list");
+            log("                        \\___ " + $statement.desc);
+            log();
             
             var obj = {};
             obj.desc = $statement.desc + $statement_list.desc;
@@ -132,8 +133,8 @@ statement_list /* == (statement)* */
         }
     |
         {
-            console.log("1)  statement_list ::= ");
-            console.log();
+            log("1)  statement_list ::= ");
+            log();
             
             var obj = {};
             obj.desc = "";
@@ -146,9 +147,9 @@ statement_list /* == (statement)* */
 statement
     : '{' statement_list '}'
         {
-            console.log("2)  statement ::= '{' statement_list '}'");
-            console.log("                       \\___ " + $statement_list.desc);
-            console.log();
+            log("2)  statement ::= '{' statement_list '}'");
+            log("                       \\___ " + $statement_list.desc);
+            log();
             
             var obj = {};
             obj.desc = "{ " + $statement_list.desc + " }";
@@ -158,11 +159,11 @@ statement
         }
     | IF '(' expression ')' statement ELSE statement
         {
-            console.log("3)  statement ::= IF '(' expression ')' statement ELSE statement");
-            console.log("                          \\_____________|_______________|____ " + $expression.desc);
-            console.log("                                         \\______________|____ " + $statement1.desc);
-            console.log("                                                         \\___ " + $statement2.desc);
-            console.log();
+            log("3)  statement ::= IF '(' expression ')' statement ELSE statement");
+            log("                          \\_____________|_______________|____ " + $expression.desc);
+            log("                                         \\______________|____ " + $statement1.desc);
+            log("                                                         \\___ " + $statement2.desc);
+            log();
 
             var obj = {};
             obj.desc = "IF (" + $expression.desc + " ) " + $statement1.desc + " ELSE " + $statement2.desc;
@@ -171,9 +172,9 @@ statement
         }
     | WHILE '(' expression ')' statement
         {
-            console.log("4)  statement ::= WHILE '(' expression ')' statement");
-            console.log("                             \\_____________|____ " + $expression.desc);
-            console.log();
+            log("4)  statement ::= WHILE '(' expression ')' statement");
+            log("                             \\_____________|____ " + $expression.desc);
+            log();
             
             var obj = {};
             obj.desc = "WHILE ( " + $expression.desc + " ) " + $statement.desc;
@@ -182,9 +183,9 @@ statement
         }
     | SYSOUT '(' expression ')' ';'
         {
-            console.log ("5)  statement ::= SYSOUT '(' expression ')' ';'");
-            console.log("                              \\____ " + $expression.desc);
-            console.log();
+            log ("5)  statement ::= SYSOUT '(' expression ')' ';'");
+            log("                              \\____ " + $expression.desc);
+            log();
 
             var obj = {};
             obj.desc = "SYSO ( " + $expression.desc + " ) ;";
@@ -193,10 +194,10 @@ statement
         }
     | ID '=' expression ';'
         {
-            console.log("6)  statement ::= ID '=' expression ';'");
-            console.log("                   \\______|___ " + $ID);
-            console.log("                           \\__ " + $expression.desc);
-            console.log();
+            log("6)  statement ::= ID '=' expression ';'");
+            log("                   \\______|___ " + $ID);
+            log("                           \\__ " + $expression.desc);
+            log();
             
             var obj = {};
             obj.desc = $ID + " = (" + $expression.desc + ")";
@@ -206,11 +207,11 @@ statement
         }
     | ID '[' expression ']' '=' expression ';'
         {
-            console.log("7)  statement ::= ID '[' expression ']' '=' expression ';'");
-            console.log("                  \\______|__________________|__ " + $ID);
-            console.log("                          \\_________________|__ " + $expression1.desc)
-            console.log("                                             \\_ " + $expression2.desc);
-            console.log();
+            log("7)  statement ::= ID '[' expression ']' '=' expression ';'");
+            log("                  \\______|__________________|__ " + $ID);
+            log("                          \\_________________|__ " + $expression1.desc)
+            log("                                             \\_ " + $expression2.desc);
+            log();
 
             var obj = {};
             obj.desc = $ID + "[ (" + $expression1.desc + ") ] = (" + $expression2.desc + ");";
@@ -224,9 +225,9 @@ statement
 expression_list /* == ( expression (',' expression)* )* */
     : expression expression_comma_list
         {
-            console.log("8)  expression_list ::= expression expression_comma_list");
-            console.log("                          \\___ " + $expression.desc);
-            console.log();
+            log("8)  expression_list ::= expression expression_comma_list");
+            log("                          \\___ " + $expression.desc);
+            log();
 
             var obj = {};
             obj.desc = "(" + $expression.desc + ")" + $expression_comma_list.desc;
@@ -236,8 +237,8 @@ expression_list /* == ( expression (',' expression)* )* */
         }
     |
         {
-            console.log("9)  expression_list ::= ");
-            console.log();
+            log("9)  expression_list ::= ");
+            log();
 
             var obj = {};
             obj.desc = "";
@@ -250,9 +251,9 @@ expression_list /* == ( expression (',' expression)* )* */
 expression_comma_list
     : ',' expression expression_comma_list
         {
-            console.log("10) expression_comma_list ::= ',' expression expression_comma_list");
-            console.log("                                   \\___ " + $expression.desc);
-            console.log();
+            log("10) expression_comma_list ::= ',' expression expression_comma_list");
+            log("                                   \\___ " + $expression.desc);
+            log();
 
             var obj = {};
             obj.desc = ", (" + $expression.desc + ")" + $expression_comma_list.desc;
@@ -262,8 +263,8 @@ expression_comma_list
         }
     |
         {
-            console.log("11) expression_comma_list ::= ");
-            console.log();
+            log("11) expression_comma_list ::= ");
+            log();
 
             var obj = {};
             obj.desc = "";
@@ -276,10 +277,10 @@ expression_comma_list
 expression
     : expression '&' expression
         {
-            console.log("12) expression ::= expression '&' expression");
-            console.log("                    \\_____________|____ " + $expression1.desc);
-            console.log("                                   \\___ " + $expression2.desc);
-            console.log();
+            log("12) expression ::= expression '&' expression");
+            log("                    \\_____________|____ " + $expression1.desc);
+            log("                                   \\___ " + $expression2.desc);
+            log();
 
             var obj = {};
             obj.desc = "(" + $expression1.desc + ") & (" + $expression2.desc + ")";
@@ -288,10 +289,10 @@ expression
         }
     | expression '<' expression 
         {
-            console.log("13) expression ::= expression '<' expression");
-            console.log("                    \\_____________|____ " + $expression1.desc);
-            console.log("                                   \\___ " + $expression2.desc);
-            console.log();
+            log("13) expression ::= expression '<' expression");
+            log("                    \\_____________|____ " + $expression1.desc);
+            log("                                   \\___ " + $expression2.desc);
+            log();
 
             var obj = {};
             obj.desc = "(" + $expression1.desc + ") < (" + $expression2.desc + ")";
@@ -301,10 +302,10 @@ expression
         }
     | expression '+' expression 
         {
-            console.log("14) expression ::= expression '+' expression");
-            console.log("                    \\_____________|____ " + $expression1.desc);
-            console.log("                                   \\___ " + $expression2.desc);
-            console.log();
+            log("14) expression ::= expression '+' expression");
+            log("                    \\_____________|____ " + $expression1.desc);
+            log("                                   \\___ " + $expression2.desc);
+            log();
 
             var obj = {};
             obj.desc = "(" + $expression1.desc + ") + (" + $expression2.desc + ")";
@@ -314,10 +315,10 @@ expression
         }
     | expression '-' expression 
         {
-            console.log("15) expression ::= expression '-' expression");
-            console.log("                    \\_____________|____ " + $expression1.desc);
-            console.log("                                   \\___ " + $expression2.desc);
-            console.log();
+            log("15) expression ::= expression '-' expression");
+            log("                    \\_____________|____ " + $expression1.desc);
+            log("                                   \\___ " + $expression2.desc);
+            log();
 
             var obj = {};
             obj.desc = "(" + $expression1.desc + ") - (" + $expression2.desc + ")";
@@ -327,10 +328,10 @@ expression
         }
     | expression '*' expression 
         {
-            console.log("16) expression ::= expression '*' expression");
-            console.log("                    \\_____________|____ " + $expression1.desc);
-            console.log("                                   \\___ " + $expression2.desc);
-            console.log();
+            log("16) expression ::= expression '*' expression");
+            log("                    \\_____________|____ " + $expression1.desc);
+            log("                                   \\___ " + $expression2.desc);
+            log();
 
             var obj = {};
             obj.desc = "(" + $expression1.desc + ") * (" + $expression2.desc + ")";
@@ -340,10 +341,10 @@ expression
         }
     | expression '[' expression ']'
         {
-            console.log("17) expression ::= expression '[' expression ']'");
-            console.log("                    \\_____________|____ " + $expression1.desc);
-            console.log("                                   \\___ " + $expression2.desc);
-            console.log();
+            log("17) expression ::= expression '[' expression ']'");
+            log("                    \\_____________|____ " + $expression1.desc);
+            log("                                   \\___ " + $expression2.desc);
+            log();
 
             var obj = {};
             obj.desc = "(" + $expression1.desc + ")" + " [ (" + $expression2.desc + ") ]";
@@ -353,9 +354,9 @@ expression
         }
     | expression '.' LENGTH
         {
-            console.log("18) expression ::= expression '.' LENGTH");
-            console.log("                    \\_______ " + $expression.desc);
-            console.log();
+            log("18) expression ::= expression '.' LENGTH");
+            log("                    \\_______ " + $expression.desc);
+            log();
 
             var obj = {};
             obj.desc = "(" + $expression.desc + ").LENGTH ";
@@ -365,10 +366,10 @@ expression
         }
     | expression '.' ID '(' expression_list ')'
         {
-            console.log("19) expression ::= expression '.' ID '(' expression_list ')'");
-            console.log("                    \\_____________|___ " + $expression.desc);
-            console.log("                                   \\__ " + $ID);
-            console.log();
+            log("19) expression ::= expression '.' ID '(' expression_list ')'");
+            log("                    \\_____________|___ " + $expression.desc);
+            log("                                   \\__ " + $ID);
+            log();
 
             var obj = {};
             obj.desc = "(" + $expression.desc + ")." + $ID + "(" + $expression_list.desc + ")";
@@ -377,9 +378,9 @@ expression
         }
     | INTEGER_LETERAL
         {
-            console.log("20) expression ::= INTEGER_LETERAL");
-            console.log("                     \\___ " + $INTEGER_LETERAL);
-            console.log();
+            log("20) expression ::= INTEGER_LETERAL");
+            log("                     \\___ " + $INTEGER_LETERAL);
+            log();
 
             var obj = {};
             obj.desc = $INTEGER_LETERAL;
@@ -389,8 +390,8 @@ expression
         }
     | TRUE
         {
-            console.log("21) expression ::= TRUE");
-            console.log();
+            log("21) expression ::= TRUE");
+            log();
 
             var obj = {};
             obj.desc = "true";
@@ -399,8 +400,8 @@ expression
         }
     | FALSE
         {
-            console.log("22) expression ::= FALSE");
-            console.log();
+            log("22) expression ::= FALSE");
+            log();
             
             var obj = {};
             obj.desc = "false";
@@ -410,9 +411,9 @@ expression
         }
     | ID
         {
-            console.log("23) expression ::= ID");
-            console.log("                    \\__ " + $ID);
-            console.log();
+            log("23) expression ::= ID");
+            log("                    \\__ " + $ID);
+            log();
             
 
             var obj = {};
@@ -422,8 +423,8 @@ expression
         }
     | THIS
         {
-            console.log("24) expression ::= THIS");
-            console.log();
+            log("24) expression ::= THIS");
+            log();
 
             var obj = {};
             obj.desc = "this";
@@ -433,9 +434,9 @@ expression
         }
     | NEW INT '[' expression ']'
         {
-            console.log("25) expression ::= NEW INT '[' expression ']'");
-            console.log("                                \\_______ " + $expression.desc);
-            console.log();
+            log("25) expression ::= NEW INT '[' expression ']'");
+            log("                                \\_______ " + $expression.desc);
+            log();
 
 
             var obj = {};
@@ -446,9 +447,9 @@ expression
         }
     | NEW ID '(' ')'
         {
-            console.log("26) expression ::= NEW ID '(' ')'");
-            console.log("                        \\___ " + $ID);
-            console.log();
+            log("26) expression ::= NEW ID '(' ')'");
+            log("                        \\___ " + $ID);
+            log();
 
             var obj = {};
             obj.desc = "new " + $ID + "()";
@@ -457,9 +458,9 @@ expression
         }
     | '!' expression
         {
-            console.log("27) expression ::= '!' expression");
-            console.log("                        \\_______ " + $expression.desc);
-            console.log();
+            log("27) expression ::= '!' expression");
+            log("                        \\_______ " + $expression.desc);
+            log();
 
             var obj = {};
             obj.desc = "! (" + $expression.desc + ")";
@@ -468,9 +469,9 @@ expression
         }
     | '(' expression ')'
         {
-            console.log("28) expression ::= '(' expression ')'");
-            console.log("                        \\_______ " + $expression.desc);
-            console.log();
+            log("28) expression ::= '(' expression ')'");
+            log("                        \\_______ " + $expression.desc);
+            log();
 
             var obj = {};
             obj.desc = "( " + $expression.desc + " )";
@@ -487,8 +488,8 @@ expression
 type
     : INT '[' ']'
         {
-            console.log("29) type ::= INT '[' ']'");
-            console.log();
+            log("29) type ::= INT '[' ']'");
+            log();
 
             var obj = {};
             obj.desc = "int[]"
@@ -497,8 +498,8 @@ type
         }
     | BOOLEAN
         {
-            console.log("30) type ::= BOOLEAN");
-            console.log();
+            log("30) type ::= BOOLEAN");
+            log();
 
             var obj = {};
             obj.desc = "boolean"
@@ -507,8 +508,8 @@ type
         }
     | INT
         {
-            console.log("31) type ::= INT");
-            console.log();
+            log("31) type ::= INT");
+            log();
 
             var obj = {};
             obj.desc = "int";
@@ -520,10 +521,10 @@ type
 type_id
     : ID ID 
         {
-            console.log("32) type_id ::= ID ID");
-            console.log("                 \\_|____ " + $ID1);
-            console.log("                    \\___ " + $ID2);
-            console.log();
+            log("32) type_id ::= ID ID");
+            log("                 \\_|____ " + $ID1);
+            log("                    \\___ " + $ID2);
+            log();
 
             var obj = {};
             obj.desc = $ID + " " + $ID;
@@ -532,10 +533,10 @@ type_id
         }
     | type ID
         {
-            console.log("33) type_id ::= type ID");
-            console.log("                 \\___|____ " + $type.desc);
-            console.log("                      \\___ " + $ID);
-            console.log();
+            log("33) type_id ::= type ID");
+            log("                 \\___|____ " + $type.desc);
+            log("                      \\___ " + $ID);
+            log();
 
 
             var obj = {};
@@ -548,9 +549,9 @@ type_id
 type_id_list
     : type_id type_id_comma_list
         {
-            console.log("34) type_id_list ::= type_id type_id_comma_list");
-            console.log("                      \\___ " + $type_id.desc);
-            console.log();
+            log("34) type_id_list ::= type_id type_id_comma_list");
+            log("                      \\___ " + $type_id.desc);
+            log();
 
             var obj = {};
             obj.desc = $type_id.desc + " " + $type_id_comma_list.desc;
@@ -560,8 +561,8 @@ type_id_list
         }
     |
         {
-            console.log("35) type_id_list");
-            console.log();
+            log("35) type_id_list");
+            log();
 
             var obj = {};
             obj.desc = "";
@@ -574,9 +575,9 @@ type_id_list
 type_id_comma_list
     : ',' type_id type_id_comma_list
         {
-            console.log("36) type_id_comma_list ::= ',' type_id type_id_comma_list");
-            console.log("                                \\___ " + $type_id.desc);
-            console.log();
+            log("36) type_id_comma_list ::= ',' type_id type_id_comma_list");
+            log("                                \\___ " + $type_id.desc);
+            log();
 
 
             var obj = {};
@@ -587,8 +588,8 @@ type_id_comma_list
         }
     |
         {
-            console.log("37) type_id_comma_list ::=");
-            console.log();
+            log("37) type_id_comma_list ::=");
+            log();
 
 
             var obj = {};
@@ -605,9 +606,9 @@ type_id_comma_list
 var_decl_list
     : var_decl_list var_decl /* used left recursion to fix shift/reduce conflict! */
         {
-            console.log("38) var_decl_list ::= var_decl_list var_decl");
-            console.log("                                     \\___ " + $var_decl.desc);
-            console.log();
+            log("38) var_decl_list ::= var_decl_list var_decl");
+            log("                                     \\___ " + $var_decl.desc);
+            log();
 
 
             var obj = {};
@@ -618,8 +619,8 @@ var_decl_list
         }
     |
         {
-            console.log("39) var_decl_list ::=");
-            console.log();
+            log("39) var_decl_list ::=");
+            log();
 
 
             var obj = {};
@@ -633,9 +634,9 @@ var_decl_list
 var_decl
     : type_id ';'
         {
-            console.log("40) var_decl ::= type_id ';'");
-            console.log("                  \\___ " + $type_id.desc);
-            console.log();
+            log("40) var_decl ::= type_id ';'");
+            log("                  \\___ " + $type_id.desc);
+            log();
 
 
             var obj = {};
@@ -652,10 +653,10 @@ var_decl
 main_class
     : CLASS ID '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' ID ')' '{' statement_list '}' '}'
         {
-            console.log("41) main_class ::= CLASS ID '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' ID ')' '{' statement_list '}' '}'");
-            console.log("                          \\________________________________________________|___ " + $ID1)
-            console.log("                                                                            \\__ " + $ID2)
-            console.log();
+            log("41) main_class ::= CLASS ID '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' ID ')' '{' statement_list '}' '}'");
+            log("                          \\________________________________________________|___ " + $ID1)
+            log("                                                                            \\__ " + $ID2)
+            log();
 
             var obj = {};
             obj.desc = "Main class: " + $ID;
@@ -671,8 +672,8 @@ main_class
 class_decl_list
     : class_decl class_decl_list
         {
-            console.log("42) class_decl_list ::= class_decl class_decl_list");
-            console.log();
+            log("42) class_decl_list ::= class_decl class_decl_list");
+            log();
 
 
             var obj = {};
@@ -683,8 +684,8 @@ class_decl_list
         }
     |
         {
-            console.log("43) class_decl_list ::= ");
-            console.log();
+            log("43) class_decl_list ::= ");
+            log();
 
 
             var obj = {};
@@ -698,9 +699,9 @@ class_decl_list
 class_decl
     : CLASS ID class_extension_signature '{' var_decl_list method_decl_list '}'
         {
-            console.log("44) class_decl ::= CLASS ID class_extension_signature '{' var_decl_list method_decl_list '}'");
-            console.log("                          \\___ " + $ID);
-            console.log();
+            log("44) class_decl ::= CLASS ID class_extension_signature '{' var_decl_list method_decl_list '}'");
+            log("                          \\___ " + $ID);
+            log();
 
 
             var obj = {};
@@ -714,9 +715,9 @@ class_decl
 class_extension_signature
     : EXTENDS ID 
         {
-            console.log("45) class_extension_signature ::= EXTENDS ID");
-            console.log("                                           \\___ " + $ID);
-            console.log();
+            log("45) class_extension_signature ::= EXTENDS ID");
+            log("                                           \\___ " + $ID);
+            log();
 
 
             var obj = {};
@@ -727,8 +728,8 @@ class_extension_signature
         }
     |
         {
-            console.log("46) class_extension_signature ::= ");
-            console.log();
+            log("46) class_extension_signature ::= ");
+            log();
 
 
             var obj = {};
@@ -745,8 +746,8 @@ class_extension_signature
 method_decl_list
     : method_decl method_decl_list
         {
-            console.log("47) method_decl_list ::= method_decl method_decl_list");
-            console.log();
+            log("47) method_decl_list ::= method_decl method_decl_list");
+            log();
 
 
             var obj = {};
@@ -757,8 +758,8 @@ method_decl_list
         }
     |
         {
-            console.log("48) method_decl_list ::= ");
-            console.log();
+            log("48) method_decl_list ::= ");
+            log();
 
 
             var obj = {};
@@ -772,8 +773,8 @@ method_decl_list
 method_decl
     : PUBLIC type_id '(' type_id_list ')' '{' var_decl_list statement_list RETURN expression ';' '}'
         {
-            console.log("49) method_decl ::= PUBLIC type_id '(' type_id_list ')' '{' var_decl_list statement_list RETURN expression ';' '}'");
-            console.log();
+            log("49) method_decl ::= PUBLIC type_id '(' type_id_list ')' '{' var_decl_list statement_list RETURN expression ';' '}'");
+            log();
 
 
             var obj = {};
