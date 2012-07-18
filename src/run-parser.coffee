@@ -12,7 +12,7 @@ types =
   'LALR(1)' : 'lalr'
 
 
-parser = new Parser grammar, {type:types['LALR(1)']}
+parser = new Parser grammar, {type:types['SLR(1)']}
 
 parserSource = parser.generate()
 

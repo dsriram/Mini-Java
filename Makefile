@@ -1,8 +1,7 @@
-all: run
+all: compile run
 
-compile: src/mini-java.jison
-	cd src && \
-	jison mini-java.jison
+compile: 
+	coffee --bare --compile src/initialize.coffee
 	
 run:
 	cd src && \

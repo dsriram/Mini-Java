@@ -93,18 +93,7 @@ initializer
     : '.'
         {
             INCLUDE("initialize.js");
-            console.log = log;
-
-            function Node(name, type) {
-                this.name = name;
-                this.type = type;
-                this.getInfo = function(prefix) {
-                    log(prefix + " " + this.type + " | " + this.name);
-                }
-                this.validate = function() {
-                    log('-------');
-                }
-            }
+            Node = LocalNode;
         }
     ;
 
