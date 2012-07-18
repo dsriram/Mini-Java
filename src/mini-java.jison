@@ -91,7 +91,7 @@ start
 
 initializer
     : '.'
-        {
+        {{
             log = console.log;
             
             INCLUDE("node");
@@ -100,12 +100,12 @@ initializer
             INCLUDE("underscore");
             
             root = new Node("root", "ROOT_NODE");
-        }
+        }}
     ;
 
 goal
     : main_class class_decl_list EOF
-        {
+        {{
             var node = new Node ("goal", 1);
 
             node.print = function() {
@@ -117,7 +117,7 @@ goal
             
             node.desc = $main_class.desc + " " + $class_decl_list.desc;
             $$ = node;
-        }
+        }}
     ;
 
 
@@ -125,7 +125,7 @@ goal
 
 statement_list /* == (statement)* */
     : statement statement_list
-        {
+        {{
             var node = new Node("statement_list", 1);
             
             node.print = function() {
@@ -136,9 +136,9 @@ statement_list /* == (statement)* */
             node.desc = $statement.desc + $statement_list.desc;
 
             $$ = node;
-        }
+        }}
     |
-        {
+        {{
             var node = new Node("statement_list", 2);
             
             node.print = function() {
@@ -150,12 +150,12 @@ statement_list /* == (statement)* */
 
             $$ = node;
             
-        }
+        }}
     ;
 
 statement
     : '{' statement_list '}'
-        {
+        {{
             var node = new Node("statement", 1);
             
             node.print = function() {
@@ -168,9 +168,9 @@ statement
 
             $$ = node;
             
-        }
+        }}
     | IF '(' expression ')' statement ELSE statement
-        {
+        {{
             var node = new Node("statement", 2);
             
             node.print = function() {
@@ -184,9 +184,9 @@ statement
             node.desc = "IF (" + $expression.desc + " ) " + $statement1.desc + " ELSE " + $statement2.desc;
 
             $$ = node;
-        }
+        }}
     | WHILE '(' expression ')' statement
-        {
+        {{
             var node = new Node("statement", 3);
             
             node.print = function() {
@@ -198,9 +198,9 @@ statement
             node.desc = "WHILE ( " + $expression.desc + " ) " + $statement.desc;
 
             $$ = node;
-        }
+        }}
     | SYSOUT '(' expression ')' ';'
-        {
+        {{
             var node = new Node("statement", 4);
             
             node.print = function() {
@@ -212,9 +212,9 @@ statement
             node.desc = "SYSO ( " + $expression.desc + " ) ;";
 
             $$ = node;
-        }
+        }}
     | ID '=' expression ';'
-        {
+        {{
             var node = new Node("statement", 5);
             
             node.print = function() {
@@ -228,9 +228,9 @@ statement
 
             $$ = node;
             
-        }
+        }}
     | ID '[' expression ']' '=' expression ';'
-        {
+        {{
             var node = new Node("statement", 6);
             
             node.print = function() {
@@ -245,13 +245,13 @@ statement
 
             $$ = node;
             
-        }
+        }}
     ;
 
 
 expression_list /* == ( expression (',' expression)* )* */
     : expression expression_comma_list
-        {
+        {{
             var node = new Node("expression_list", 1);
             
             node.print = function() {
@@ -264,9 +264,9 @@ expression_list /* == ( expression (',' expression)* )* */
 
             $$ = node;
             
-        }
+        }}
     |
-        {
+        {{
             var node = new Node("expression_list", 2);
             
             node.print = function() {
@@ -278,12 +278,12 @@ expression_list /* == ( expression (',' expression)* )* */
 
             $$ = node;
             
-        }
+        }}
     ;
 
 expression_comma_list
     : ',' expression expression_comma_list
-        {
+        {{
             var node = new Node("expression_comma_list", 1);
             
             node.print = function() {
@@ -296,9 +296,9 @@ expression_comma_list
 
             $$ = node;
             
-        }
+        }}
     |
-        {
+        {{
             var node = new Node("expression_comma_list", 2);
             
             node.print = function() {
@@ -310,12 +310,12 @@ expression_comma_list
 
             $$ = node;
             
-        }
+        }}
     ;
 
 expression
     : expression '&' expression
-        {
+        {{
             var node = new Node("expression", 1);
             
             node.print = function() {
@@ -328,9 +328,9 @@ expression
             node.desc = "(" + $expression1.desc + ") & (" + $expression2.desc + ")";
 
             $$ = node;
-        }
+        }}
     | expression '<' expression 
-        {
+        {{
             var node = new Node("expression", 2);
             
             node.print = function() {
@@ -344,9 +344,9 @@ expression
 
             $$ = node;
             
-        }
+        }}
     | expression '+' expression 
-        {
+        {{
             var node = new Node("expression", 3);
             
             node.print = function() {
@@ -360,9 +360,9 @@ expression
 
             $$ = node;
             
-        }
+        }}
     | expression '-' expression 
-        {
+        {{
             var node = new Node("expression", 4);
             
             node.print = function() {
@@ -376,9 +376,9 @@ expression
 
             $$ = node;
             
-        }
+        }}
     | expression '*' expression 
-        {
+        {{
             var node = new Node("expression", 5);
             
             node.print = function() {
@@ -392,9 +392,9 @@ expression
 
             $$ = node;
             
-        }
+        }}
     | expression '[' expression ']'
-        {
+        {{
             var node = new Node("expression", 6);
             
             node.print = function() {
@@ -408,9 +408,9 @@ expression
 
             $$ = node;
             
-        }
+        }}
     | expression '.' LENGTH
-        {
+        {{
             var node = new Node("expression", 7);
             
             node.print = function() {
@@ -423,9 +423,9 @@ expression
 
             $$ = node;
             
-        }
+        }}
     | expression '.' ID '(' expression_list ')'
-        {
+        {{
             var node = new Node("expression", 8);
             
             node.print = function() {
@@ -438,9 +438,9 @@ expression
             node.desc = "(" + $expression.desc + ")." + $ID + "(" + $expression_list.desc + ")";
 
             $$ = node;
-        }
+        }}
     | INTEGER_LETERAL
-        {
+        {{
             var node = new Node("expression", 9);
             
             node.print = function() {
@@ -453,9 +453,9 @@ expression
 
             $$ = node;
             
-        }
+        }}
     | TRUE
-        {
+        {{
             var node = new Node("expression", 10);
             
             node.print = function() {
@@ -466,9 +466,9 @@ expression
             node.desc = "true";
 
             $$ = node;
-        }
+        }}
     | FALSE
-        {
+        {{
             var node = new Node("expression", 11);
             
             node.print = function() {
@@ -480,9 +480,9 @@ expression
 
             $$ = node;
             
-        }
+        }}
     | ID
-        {
+        {{
             var node = new Node("expression", 12);
             
             node.print = function() {
@@ -495,9 +495,9 @@ expression
             node.desc = $ID;
 
             $$ = node;
-        }
+        }}
     | THIS
-        {
+        {{
             var node = new Node("expression", 13);
             
             node.print = function() {
@@ -509,9 +509,9 @@ expression
 
             $$ = node;
             
-        }
+        }}
     | NEW INT '[' expression ']'
-        {
+        {{
             var node = new Node("expression", 14);
             
             node.print = function() {
@@ -525,9 +525,9 @@ expression
 
             $$ = node;
             
-        }
+        }}
     | NEW ID '(' ')'
-        {
+        {{
             var node = new Node("expression", 15);
             
             node.print = function() {
@@ -539,9 +539,9 @@ expression
             node.desc = "new " + $ID + "()";
 
             $$ = node;
-        }
+        }}
     | '!' expression
-        {
+        {{
             var node = new Node("expression", 16);
             
             node.print = function() {
@@ -553,9 +553,9 @@ expression
             node.desc = "! (" + $expression.desc + ")";
 
             $$ = node;
-        }
+        }}
     | '(' expression ')'
-        {
+        {{
             var node = new Node("expression", 17);
             
             node.print = function() {
@@ -568,7 +568,7 @@ expression
 
             $$ = node;
 
-        }
+        }}
     ;
 
 
@@ -577,7 +577,7 @@ expression
 
 type
     : INT '[' ']'
-        {
+        {{
             var node = new Node("type", 1);
             
             node.print = function() {
@@ -588,9 +588,9 @@ type
             node.desc = "int[]";
 
             $$ = node;
-        }
+        }}
     | BOOLEAN
-        {
+        {{
             var node = new Node("type", 2);
             
             node.print = function() {
@@ -601,9 +601,9 @@ type
             node.desc = "boolean";
 
             $$ = node;
-        }
+        }}
     | INT
-        {
+        {{
             var node = new Node("type", 3);
             
             node.print = function() {
@@ -614,12 +614,12 @@ type
             node.desc = "int";
 
             $$ = node;
-        }
+        }}
     ;
 
 type_id
     : ID ID 
-        {
+        {{
             var node = new Node("type_id", 1);
             node.print = function() {
                 log("32) type_id ::= ID ID");
@@ -631,9 +631,9 @@ type_id
             node.desc = $ID + " " + $ID;
 
             $$ = node;
-        }
+        }}
     | type ID
-        {
+        {{
             var node = new Node("type_id", 2);
             node.print = function() {
                 log("33) type_id ::= type ID");
@@ -646,12 +646,12 @@ type_id
             node.desc = $type.desc + " " + $ID;
 
             $$ = node;
-        }
+        }}
     ;
 
 type_id_list
     : type_id type_id_comma_list
-        {
+        {{
             var node = new Node("type_id_list", 1);
             
             node.print = function() {
@@ -664,9 +664,9 @@ type_id_list
 
             $$ = node;
 
-        }
+        }}
     |
-        {
+        {{
             var node = new Node("type_id_list", 2);
             
             node.print = function() {
@@ -678,12 +678,12 @@ type_id_list
 
             $$ = node;
 
-        }
+        }}
     ;
 
 type_id_comma_list
     : ',' type_id type_id_comma_list
-        {
+        {{
             var node = new Node("type_id_comma_list", 1);
             
             node.print = function() {
@@ -697,9 +697,9 @@ type_id_comma_list
 
             $$ = node;
 
-        }
+        }}
     |
-        {
+        {{
             var node = new Node("type_id_comma_list", 2);
             
             node.print = function() {
@@ -712,7 +712,7 @@ type_id_comma_list
 
             $$ = node;
 
-        }
+        }}
     ;
 
 
@@ -720,7 +720,7 @@ type_id_comma_list
 
 var_decl_list
     : var_decl_list var_decl /* used left recursion to fix shift/reduce conflict! */
-        {
+        {{
             var node = new Node("var_decl_list", 1);
             
             node.print = function() {
@@ -734,9 +734,9 @@ var_decl_list
 
             $$ = node;
 
-        }
+        }}
     |
-        {
+        {{
             var node = new Node("var_decl_list", 2);
             
             node.print = function() {
@@ -749,12 +749,12 @@ var_decl_list
 
             $$ = node;
 
-        }
+        }}
     ;
 
 var_decl
     : type_id ';'
-        {
+        {{
             var node = new Node("var_decl", 1);
             
             node.print = function() {
@@ -768,7 +768,7 @@ var_decl
 
             $$ = node;
 
-        }
+        }}
     ;
 
 
@@ -776,7 +776,7 @@ var_decl
 
 main_class
     : CLASS ID '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' ID ')' '{' statement_list '}' '}'
-        {
+        {{
             var node = new Node("main_class", 1);
             
             node.print = function() {
@@ -789,7 +789,7 @@ main_class
             node.desc = "Main class: " + $ID;
 
             $$ = node;
-        }
+        }}
     ;
 
 
@@ -798,7 +798,7 @@ main_class
 
 class_decl_list
     : class_decl class_decl_list
-        {
+        {{
             var node = new Node("class_decl_list", 1);
             
             node.print = function() {
@@ -811,9 +811,9 @@ class_decl_list
 
             $$ = node;
 
-        }
+        }}
     |
-        {
+        {{
             var node = new Node("class_decl_list", 2);
             
             node.print = function() {
@@ -826,12 +826,12 @@ class_decl_list
 
             $$ = node;
 
-        }
+        }}
     ;
 
 class_decl
     : CLASS ID class_extension_signature '{' var_decl_list method_decl_list '}'
-        {
+        {{
             var node = new Node("class_decl", 1);
             
             node.print = function() {
@@ -845,12 +845,12 @@ class_decl
 
             $$ = node;
 
-        }
+        }}
     ;
 
 class_extension_signature
     : EXTENDS ID 
-        {
+        {{
             var node = new Node("class_extension_signature", 1);
             
             node.print = function() {
@@ -864,9 +864,9 @@ class_extension_signature
 
             $$ = node;
 
-        }
+        }}
     |
-        {
+        {{
             var node = new Node("class_extension_signature", 2);
             
             node.print = function() {
@@ -879,7 +879,7 @@ class_extension_signature
 
             $$ = node;
 
-        }
+        }}
     ;
 
 
@@ -887,7 +887,7 @@ class_extension_signature
 
 method_decl_list
     : method_decl method_decl_list
-        {
+        {{
             var node = new Node("method_decl_list", 1);
             
             node.print = function() {
@@ -900,9 +900,9 @@ method_decl_list
 
             $$ = node;
 
-        }
+        }}
     |
-        {
+        {{
             var node = new Node("method_decl_list", 2);
             
             node.print = function() {
@@ -915,12 +915,12 @@ method_decl_list
 
             $$ = node;
 
-        }
+        }}
     ;
 
 method_decl
     : PUBLIC type_id '(' type_id_list ')' '{' var_decl_list statement_list RETURN expression ';' '}'
-        {
+        {{
             var node = new Node("method_decl", 1);
             
             node.print = function() {
@@ -933,7 +933,7 @@ method_decl
 
             $$ = node;
 
-        }
+        }}
     ;
 
 
