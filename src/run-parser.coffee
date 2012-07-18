@@ -3,7 +3,7 @@ Parser      = (require 'jison').Parser
 
 grammar = fs.readFileSync 'mini-java.jison', 'UTF8'
 grammar = grammar.replace 'INCLUDE("node");', (fs.readFileSync 'node.js', 'UTF8')
-grammar = grammar.replace 'INCLUDE("underscore");', (fs.readFileSync 'underscore.js', 'UTF8')
+grammar = grammar.replace 'INCLUDE("underscore");', (fs.readFileSync 'helpers/underscore.js', 'UTF8')
 
 types = 
   'LL(1)'   : 'll'
@@ -17,4 +17,4 @@ parser = new Parser grammar, {type:types['LALR(1)']}
 
 parserSource = parser.generate()
 
-parser.parse '.' + (fs.readFileSync 'test-case-2.java', 'UTF8')
+parser.parse '.' + (fs.readFileSync '../test/test1.java', 'UTF8')
