@@ -31,7 +31,7 @@ id                    [a-zA-Z][a-zA-Z0-9_]*
 "false"                 return "FALSE"
 
 {id}                    return "ID"
-{digit}+                return "INTEGER_LETERAL"
+{digit}+                return "INTEGER_LITERAL"
 
 "{"                     return '{'
 "}"                     return '}'
@@ -376,6 +376,13 @@ statement
     ;
 
 
+
+
+
+
+
+
+// CHECKED 1
 expression_list /* == ( expression (',' expression)* )* */
     : expression expression_comma_list
         {{
@@ -389,6 +396,31 @@ expression_list /* == ( expression (',' expression)* )* */
 
             node.desc = "(" + $expression.desc + ")" + $expression_comma_list.desc;
 
+            // CHILDREN
+            var children = new Array();
+            children[0] = $expression;
+            children[0].parent = node;
+            
+            children[1] = new Leaf("LITERAL", ",", node);
+
+            children[2] = $expression_comma_list;
+            children[2].parent = node;
+
+            node.setChildren(children);
+
+            node.returnFlattenedChildren = function() {
+                var arr = new Array();
+                arr[0] = children[0];
+                arr[2] = children[2].returnFlattenedChildren();
+                if (arr[2].length) {
+                    arr[1] = children[1];
+                    _.each(arr[2], function(item) {
+                        item.parent = node;
+                    });
+                }
+                return _.flatten(arr);
+            };
+
             $$ = node;
             
         }}
@@ -401,13 +433,17 @@ expression_list /* == ( expression (',' expression)* )* */
                 log();
             }
 
-            
+            node.returnFlattenedChildren = function() {
+                return [];
+            }
 
             $$ = node;
             
         }}
     ;
 
+
+// CHECKED 1
 expression_comma_list
     : ',' expression expression_comma_list
         {{
@@ -421,6 +457,31 @@ expression_comma_list
 
             node.desc = ", (" + $expression.desc + ")" + $expression_comma_list.desc;
 
+            // CHILDREN
+            var children = new Array();
+            children[0] = $expression;
+            children[0].parent = node;
+            
+            children[1] = new Leaf("LITERAL", ",", node);
+
+            children[2] = $expression_comma_list;
+            children[2].parent = node;
+
+            node.setChildren(children);
+
+            node.returnFlattenedChildren = function() {
+                var arr = new Array();
+                arr[0] = children[0];
+                arr[2] = children[2].returnFlattenedChildren();
+                if (arr[2].length) {
+                    arr[1] = children[1];
+                    _.each(arr[2], function(item) {
+                        item.parent = node;
+                    });
+                }
+                return _.flatten(arr);
+            };
+
             $$ = node;
             
         }}
@@ -433,13 +494,17 @@ expression_comma_list
                 log();
             }
 
-            
+            node.returnFlattenedChildren = function() {
+                return [];
+            }
 
             $$ = node;
             
         }}
     ;
 
+
+// CHECKED 1
 expression
     : expression '&' expression
         {{
@@ -453,6 +518,16 @@ expression
             }
 
             node.desc = "(" + $expression1.desc + ") & (" + $expression2.desc + ")";
+
+            // CHILDREN
+            var children = new Array();
+            $expression1.parent = node;
+            children.push($expression1);
+            children.push(new Leaf("LITERAL", "&", node));
+            $expression2.parent = node;
+            children.push($expression2);
+            
+            node.setChildren(children);
 
             $$ = node;
         }}
@@ -468,6 +543,16 @@ expression
             }
 
             node.desc = "(" + $expression1.desc + ") < (" + $expression2.desc + ")";
+
+            // CHILDREN
+            var children = new Array();
+            $expression1.parent = node;
+            children.push($expression1);
+            children.push(new Leaf("LITERAL", "<", node));
+            $expression2.parent = node;
+            children.push($expression2);
+            
+            node.setChildren(children);
 
             $$ = node;
             
@@ -485,6 +570,16 @@ expression
 
             node.desc = "(" + $expression1.desc + ") + (" + $expression2.desc + ")";
 
+            // CHILDREN
+            var children = new Array();
+            $expression1.parent = node;
+            children.push($expression1);
+            children.push(new Leaf("LITERAL", "+", node));
+            $expression2.parent = node;
+            children.push($expression2);
+            
+            node.setChildren(children);
+
             $$ = node;
             
         }}
@@ -500,6 +595,16 @@ expression
             }
 
             node.desc = "(" + $expression1.desc + ") - (" + $expression2.desc + ")";
+
+            // CHILDREN
+            var children = new Array();
+            $expression1.parent = node;
+            children.push($expression1);
+            children.push(new Leaf("LITERAL", "-", node));
+            $expression2.parent = node;
+            children.push($expression2);
+            
+            node.setChildren(children);
 
             $$ = node;
             
@@ -517,6 +622,16 @@ expression
 
             node.desc = "(" + $expression1.desc + ") * (" + $expression2.desc + ")";
 
+            // CHILDREN
+            var children = new Array();
+            $expression1.parent = node;
+            children.push($expression1);
+            children.push(new Leaf("LITERAL", "*", node));
+            $expression2.parent = node;
+            children.push($expression2);
+            
+            node.setChildren(children);
+
             $$ = node;
             
         }}
@@ -533,6 +648,17 @@ expression
 
             node.desc = "(" + $expression1.desc + ")" + " [ (" + $expression2.desc + ") ]";
 
+            // CHILDREN
+            var children = new Array();
+            $expression1.parent = node;
+            children.push($expression1);
+            children.push(new Leaf("LITERAL", "[", node));
+            $expression2.parent = node;
+            children.push($expression2);
+            children.push(new Leaf("LITERAL", "]", node));
+            
+            node.setChildren(children);
+
             $$ = node;
             
         }}
@@ -547,6 +673,15 @@ expression
             }
 
             node.desc = "(" + $expression.desc + ").LENGTH ";
+
+            // CHILDREN
+            var children = new Array();
+            $expression.parent = node;
+            children.push($expression);
+            children.push(new Leaf("LITERAL", ".", node));
+            children.push(new Leaf("LITERAL", "LENGTH", node));
+            
+            node.setChildren(children);
 
             $$ = node;
             
@@ -564,26 +699,42 @@ expression
 
             node.desc = "(" + $expression.desc + ")." + $ID + "(" + $expression_list.desc + ")";
 
+
+            // CHILDREN
+            var children = new Array();
+            $expression.parent = node;
+            children.push($expression);
+            children.push(new Leaf("LITERAL", ".", node));
+            children.push(new Leaf("ID", $ID, node));
+            children.push(new Leaf("LITERAL", "LENGTH", node));
+            children.push(new Leaf("LITERAL", "(", node));
+            children.push($expression_list.returnFlattenedChildren());
+            children.push(new Leaf("LITERAL", ")", node));
+            children = _.flatten(children);
+            
+            node.setChildren(children);
+
+
             $$ = node;
         }}
-    | INTEGER_LETERAL
+    | INTEGER_LITERAL
         {{
-            var node = new Node("expression", 9);
+            var node = new Leaf("INTEGER_LITERAL", $INTEGER_LITERAL, undefined);
             
             node.print = function() {
-                log("20) expression ::= INTEGER_LETERAL");
-                log("                     \\___ " + $INTEGER_LETERAL);
+                log("20) expression ::= INTEGER_LITERAL");
+                log("                     \\___ " + $INTEGER_LITERAL);
                 log();
             }
 
-            node.desc = $INTEGER_LETERAL;
+            node.desc = $INTEGER_LITERAL;
 
             $$ = node;
             
         }}
     | TRUE
         {{
-            var node = new Node("expression", 10);
+            var node = new Leaf("BOOLEAN", "TRUE", undefined);
             
             node.print = function() {
                 log("21) expression ::= TRUE");
@@ -596,7 +747,7 @@ expression
         }}
     | FALSE
         {{
-            var node = new Node("expression", 11);
+            var node = new Leaf("BOOLEAN", "FALSE", undefined);
             
             node.print = function() {
                 log("22) expression ::= FALSE");
@@ -610,7 +761,7 @@ expression
         }}
     | ID
         {{
-            var node = new Node("expression", 12);
+            var node = new Leaf("ID", $ID, undefined);
             
             node.print = function() {
                 log("23) expression ::= ID");
@@ -625,7 +776,7 @@ expression
         }}
     | THIS
         {{
-            var node = new Node("expression", 13);
+            var node = new Leaf("LITERAL", "THIS", undefined);
             
             node.print = function() {
                 log("24) expression ::= THIS");
@@ -647,8 +798,17 @@ expression
                 log();
             }
 
-
             node.desc = "new int [" + $expression.desc + "]";
+
+            // CHILDREN
+            var children = new Array();
+            children.push(new Leaf("LITERAL", "NEW", node));
+            children.push(new Leaf("LITERAL", "[", node));
+            $expression.parent = node;
+            children.push($expression);
+            children.push(new Leaf("LITERAL", "]", node));
+            
+            node.setChildren(children);
 
             $$ = node;
             
@@ -667,15 +827,11 @@ expression
 
             // CHILDREN
             var children = new Array();
+            children.push(new Leaf("LITERAL", "NEW", node));
+            children.push(new Leaf("ID", $ID, node));
+            children.push(new Leaf("LITERAL", "(", node));
+            children.push(new Leaf("LITERAL", ")", node));
             
-            children[0] = new Leaf("new", "new", node);
-            
-            children[1] = new Leaf("id", $ID, node);
-            
-            children[2] = new Leaf("(", "(", node);
-            
-            children[3] = new Leaf(")", ")", node);
-
             node.setChildren(children);
 
             
@@ -693,6 +849,14 @@ expression
 
             node.desc = "! (" + $expression.desc + ")";
 
+            // CHILDREN
+            var children = new Array();
+            children.push(new Leaf("LITERAL", "!", node));
+            $expression.parent = node;
+            children.push($expression);
+            
+            node.setChildren(children);
+
             $$ = node;
         }}
     | '(' expression ')'
@@ -706,6 +870,15 @@ expression
             }
 
             node.desc = "( " + $expression.desc + " )";
+
+            // CHILDREN
+            var children = new Array();
+            children.push(new Leaf("LITERAL", "(", node));
+            $expression.parent = node;
+            children.push($expression);
+            children.push(new Leaf("LITERAL", ")", node));
+            
+            node.setChildren(children);
 
             $$ = node;
 
@@ -859,7 +1032,7 @@ type_id_comma_list
                 log();
             }
 
-            node.desc = ", " + $type_id.desc + $type_id_comma_list.desc
+            node.desc = ", " + $type_id.desc + $type_id_comma_list.desc;
 
             // CHILDREN
             var children = new Array();

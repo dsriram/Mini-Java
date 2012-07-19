@@ -1,6 +1,6 @@
 class Factorial {
     public static void main(String[] args) {
-        System.out.println(new Fact().ComputeFac(10).fun().length);
+        System.out.println(new Fact().ComputeFac(10,11,12).fun().length);
         if (true)
             alpha = b;
         else {
@@ -8,8 +8,8 @@ class Factorial {
             b = a+2;
             c = a+2;
             {
-                x = a.length - 1;
-                y[1+2*4] = a+2;
+                x = a.length;
+                y[1+2*4] = a+2 - 1 - 2 * 3;
             }
         }
     }
