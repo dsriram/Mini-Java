@@ -130,11 +130,9 @@ goal
             children[0].parent = rootNode;
 
             var classes = $class_decl_list.returnFlattenedChildren();
-            var i = 1;
             _.each(classes, function(class_decl) {
-                children[i] = class_decl;
-                children[i].parent = rootNode;
-                i++;
+                class_decl.parent = rootNode;
+                children.push(class_decl);
             });
 
             rootNode.setChildren(children);
@@ -1035,8 +1033,8 @@ class_decl
             
             var i = 5;
 // FIXME
-            //children[4] = new Leaf("LITERAL", "{", node);
-            //children[4] = new Leaf("LITERAL", "{", node);
+            //var_decl
+            //method_decl
             
             children[i] = new Leaf("LITERAL", "}", node);
 
