@@ -718,7 +718,6 @@ expression
             children.push($expression);
             children.push(new Leaf("LITERAL", ".", node));
             children.push(new Leaf("ID", $ID, node));
-            children.push(new Leaf("LITERAL", "LENGTH", node));
             children.push(new Leaf("LITERAL", "(", node));
             children.push($expression_list.returnFlattenedChildren());
             children.push(new Leaf("LITERAL", ")", node));
