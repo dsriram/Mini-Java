@@ -36,6 +36,16 @@ class LocalNode
   # -------------------------
   print: ->
     return;
+
+  printJSON: ->
+    if @children && @children.length
+      childrenJSON = (child.printJSON() for child in @children)
+    return {
+      @type
+      childrenJSON
+    }
+
+
   
   validate: ->
     return false;
@@ -52,6 +62,12 @@ class LocalLeaf extends LocalNode
 
   print: ->
     console.log @desc;
+
+  printJSON: ->
+    return {
+      @type
+      @value
+    }
   
   validate: ->
     return true;

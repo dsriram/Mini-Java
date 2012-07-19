@@ -93,7 +93,10 @@ id                    [a-zA-Z][a-zA-Z0-9_]*
 start
     : initializer goal
         {{
+            log(JSON.stringify(rootNode.printJSON(), null, 4));
+
             log("---end---");
+            
             return rootNode;
         }}
     ;
@@ -108,7 +111,7 @@ initializer
             INCLUDE("node");
             Node = LocalNode;
             Leaf = LocalLeaf;
-            rootNode = new Node ("ROOT_NODE", null, null);
+            rootNode = new Node ("ROOT_NODE", 1, null);
 
             INCLUDE("underscore");
             
@@ -1331,16 +1334,18 @@ class_decl
             children.push(new Leaf("LITERAL", "{", node));
 
             var declarations = $var_decl_list.returnFlattenedChildren();
-            if (declarations.length)
+            if (declarations && declarations.length) {
                 _.each(declarations, function(item) {
                     children.push(item);
                 });
+            }
             
             var methods = $method_decl_list.returnFlattenedChildren();
-            if (methods.length)
+            if (methods && methods.length) {
                 _.each(methods, function(item) {
                     children.push(item);
                 });
+            }
             
             children.push(new Leaf("LITERAL", "}", node));
 
@@ -1463,25 +1468,46 @@ method_decl
             // CHILDREN
             var children = new Array();
             children.push(new Leaf("LITERAL", "PUBLIC", node));
+            
             var type = $type_id.children[0];
             type.parent = node;
+            children.push(type);
+
             var id = $type_id.children[1];
             id.parent = node;
-            children.push(type);
             children.push(id);
+            
             children.push(new Leaf("LITERAL", "(", node));
-            $type_id_list.parent = node;
-            children.push($type_id_list.returnFlattenedChildren());
+            
+            var types = $type_id_list.returnFlattenedChildren();
+            _.each(types, function(item) {
+                item.parent = node;
+                children.push(item);
+            });
+            
             children.push(new Leaf("LITERAL", ")", node));
+            
             children.push(new Leaf("LITERAL", "{", node));
-            $var_decl_list.parent = node;
-            children.push($var_decl_list.returnFlattenedChildren());
-            $statement_list.parent = node;
-            children.push($statement_list.returnFlattenedChildren());
+            
+            var variables = $var_decl_list.returnFlattenedChildren();
+            _.each(variables, function(item) {
+                item.parent = node;
+                children.push(item);
+            });
+            
+            var statements = $statement_list.returnFlattenedChildren();
+            _.each(statements, function(item) {
+                item.parent = node;
+                children.push(item);
+            });
+            
             children.push(new Leaf("LITERAL", "RETURN", node));
+            
             $expression.parent = node;
             children.push($expression);
+            
             children.push(new Leaf("LITERAL", ";", node));
+            
             children.push(new Leaf("LITERAL", "}", node));
             
             node.setChildren(children);
