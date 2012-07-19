@@ -84,6 +84,11 @@ id                    [a-zA-Z][a-zA-Z0-9_]*
 
 %% /* language grammar */
 
+
+
+
+
+
 // CHECKED 1
 start
     : initializer goal
@@ -140,6 +145,10 @@ goal
             $$ = rootNode;
         }}
     ;
+
+
+
+
 
 
 
@@ -200,7 +209,7 @@ statement_list /* == (statement)* */
 statement
     : '{' statement_list '}'
         {{
-            var node = new Node("statement", 1);
+            var node = new Node("STATEMENT", 1);
             
             node.print = function() {
                 log("2)  statement ::= '{' statement_list '}'");
@@ -231,7 +240,7 @@ statement
         }}
     | IF '(' expression ')' statement ELSE statement
         {{
-            var node = new Node("statement", 2);
+            var node = new Node("STATEMENT", 2);
             
             node.print = function() {
                 log("3)  statement ::= IF '(' expression ')' statement ELSE statement");
@@ -263,7 +272,7 @@ statement
         }}
     | WHILE '(' expression ')' statement
         {{
-            var node = new Node("statement", 3);
+            var node = new Node("STATEMENT", 3);
             
             node.print = function() {
                 log("4)  statement ::= WHILE '(' expression ')' statement");
@@ -290,7 +299,7 @@ statement
         }}
     | SYSOUT '(' expression ')' ';'
         {{
-            var node = new Node("statement", 4);
+            var node = new Node("STATEMENT", 4);
             
             node.print = function() {
             log ("5)  statement ::= SYSOUT '(' expression ')' ';'");
@@ -316,7 +325,7 @@ statement
         }}
     | ID '=' expression ';'
         {{
-            var node = new Node("statement", 5);
+            var node = new Node("STATEMENT", 5);
             
             node.print = function() {
                 log("6)  statement ::= ID '=' expression ';'");
@@ -343,7 +352,7 @@ statement
         }}
     | ID '[' expression ']' '=' expression ';'
         {{
-            var node = new Node("statement", 6);
+            var node = new Node("STATEMENT", 6);
             
             node.print = function() {
                 log("7)  statement ::= ID '[' expression ']' '=' expression ';'");
@@ -508,7 +517,7 @@ expression_comma_list
 expression
     : expression '&' expression
         {{
-            var node = new Node("expression", 1);
+            var node = new Node("EXPRESSION", 1);
             
             node.print = function() {
                 log("12) expression ::= expression '&' expression");
@@ -533,7 +542,7 @@ expression
         }}
     | expression '<' expression 
         {{
-            var node = new Node("expression", 2);
+            var node = new Node("EXPRESSION", 2);
             
             node.print = function() {
                 log("13) expression ::= expression '<' expression");
@@ -559,7 +568,7 @@ expression
         }}
     | expression '+' expression 
         {{
-            var node = new Node("expression", 3);
+            var node = new Node("EXPRESSION", 3);
             
             node.print = function() {
                 log("14) expression ::= expression '+' expression");
@@ -585,7 +594,7 @@ expression
         }}
     | expression '-' expression 
         {{
-            var node = new Node("expression", 4);
+            var node = new Node("EXPRESSION", 4);
             
             node.print = function() {
                 log("15) expression ::= expression '-' expression");
@@ -611,7 +620,7 @@ expression
         }}
     | expression '*' expression 
         {{
-            var node = new Node("expression", 5);
+            var node = new Node("EXPRESSION", 5);
             
             node.print = function() {
                 log("16) expression ::= expression '*' expression");
@@ -637,7 +646,7 @@ expression
         }}
     | expression '[' expression ']'
         {{
-            var node = new Node("expression", 6);
+            var node = new Node("EXPRESSION", 6);
             
             node.print = function() {
                 log("17) expression ::= expression '[' expression ']'");
@@ -664,7 +673,7 @@ expression
         }}
     | expression '.' LENGTH
         {{
-            var node = new Node("expression", 7);
+            var node = new Node("EXPRESSION", 7);
             
             node.print = function() {
                 log("18) expression ::= expression '.' LENGTH");
@@ -688,7 +697,7 @@ expression
         }}
     | expression '.' ID '(' expression_list ')'
         {{
-            var node = new Node("expression", 8);
+            var node = new Node("EXPRESSION", 8);
             
             node.print = function() {
                 log("19) expression ::= expression '.' ID '(' expression_list ')'");
@@ -790,7 +799,7 @@ expression
         }}
     | NEW INT '[' expression ']'
         {{
-            var node = new Node("expression", 14);
+            var node = new Node("EXPRESSION", 14);
             
             node.print = function() {
                 log("25) expression ::= NEW INT '[' expression ']'");
@@ -815,7 +824,7 @@ expression
         }}
     | NEW ID '(' ')'
         {{
-            var node = new Node("expression", 15);
+            var node = new Node("EXPRESSION", 15);
             
             node.print = function() {
                 log("26) expression ::= NEW ID '(' ')'");
@@ -839,7 +848,7 @@ expression
         }}
     | '!' expression
         {{
-            var node = new Node("expression", 16);
+            var node = new Node("EXPRESSION", 16);
             
             node.print = function() {
                 log("27) expression ::= '!' expression");
@@ -861,7 +870,7 @@ expression
         }}
     | '(' expression ')'
         {{
-            var node = new Node("expression", 17);
+            var node = new Node("EXPRESSION", 17);
             
             node.print = function() {
                 log("28) expression ::= '(' expression ')'");
@@ -888,6 +897,10 @@ expression
 
 
 
+
+
+
+
 // CHECKED 1
 type
     : INT '[' ']'
@@ -903,6 +916,7 @@ type
             $$ = new Leaf("TYPE", "INT");
         }}
     ;
+
 
 // CHECKED 1
 type_id
@@ -958,6 +972,7 @@ type_id
             $$ = node;
         }}
     ;
+
 
 // CHECKED 1
 type_id_list
@@ -1019,6 +1034,7 @@ type_id_list
 
         }}
     ;
+
 
 // CHECKED 1
 type_id_comma_list
@@ -1084,6 +1100,11 @@ type_id_comma_list
 
 
 
+
+
+
+
+
 // CHECKED 1
 var_decl_list
     : var_decl_list var_decl /* used left recursion to fix shift/reduce conflict! */
@@ -1143,7 +1164,7 @@ var_decl_list
 var_decl
     : type_id ';'
         {{
-            var node = new Node("var_decl", 1);
+            var node = new Node("VARIABLE_DECLARATION", 1);
             
             node.print = function() {
                 log("40) var_decl ::= type_id ';'");
@@ -1175,7 +1196,7 @@ var_decl
 main_class
     : CLASS ID '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' ID ')' '{' statement_list '}' '}'
         {{
-            var node = new Node("main_class", 1);
+            var node = new Node("MAIN_CLASS", 1);
             
             node.print = function() {
                 log("41) main_class ::= CLASS ID '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' ID ')' '{' statement_list '}' '}'");
@@ -1218,6 +1239,10 @@ main_class
             $$ = node;
         }}
     ;
+
+
+
+
 
 
 
@@ -1278,10 +1303,11 @@ class_decl_list
         }}
     ;
 
+// CHECKED 1
 class_decl
     : CLASS ID class_extension_signature '{' var_decl_list method_decl_list '}'
         {{
-            var node = new Node("class_decl", 1);
+            var node = new Node("CLASS_DECLARATION", 1);
             
             node.print = function() {
                 log("44) class_decl ::= CLASS ID class_extension_signature '{' var_decl_list method_decl_list '}'");
@@ -1296,20 +1322,27 @@ class_decl
 
             // CHILDREN
             var children = new Array();
-            children[0] = new Leaf("LITERAL", "CLASS", node);
-            children[1] = new Leaf("ID", $ID, node);
+            children.push(new Leaf("LITERAL", "CLASS", node));
+            children.push(new Leaf("ID", $ID, node));
             if ($class_extension_signature.subtype == 1) {
-                children[2] = new Leaf("LITERAL", "EXTENDS", node);
-                children[3] = new Leaf("ID", $class_extension_signature.extendedClassName, node);
+                children.push(new Leaf("LITERAL", "EXTENDS", node));
+                children.push(new Leaf("ID", $class_extension_signature.extendedClassName, node));
             }
-            children[4] = new Leaf("LITERAL", "{", node);
+            children.push(new Leaf("LITERAL", "{", node));
+
+            var declarations = $var_decl_list.returnFlattenedChildren();
+            if (declarations.length)
+                _.each(declarations, function(item) {
+                    children.push(item);
+                });
             
-            var i = 5;
-// FIXME
-            //var_decl
-            //method_decl
+            var methods = $method_decl_list.returnFlattenedChildren();
+            if (methods.length)
+                _.each(methods, function(item) {
+                    children.push(item);
+                });
             
-            children[i] = new Leaf("LITERAL", "}", node);
+            children.push(new Leaf("LITERAL", "}", node));
 
             node.setChildren(children);
             //log('---------class_decl');log(node);log('---------');log();
@@ -1318,6 +1351,7 @@ class_decl
 
         }}
     ;
+
 
 // CHECKED 1
 class_extension_signature
@@ -1356,6 +1390,9 @@ class_extension_signature
 
 
 
+
+
+// CHECKED 1
 method_decl_list
     : method_decl method_decl_list
         {{
@@ -1366,8 +1403,27 @@ method_decl_list
                 log();
             }
 
-
             node.desc = $method_decl.desc + " " + $method_decl_list.desc;
+
+            // CHILDREN
+            var children = new Array();
+            children[0] = $method_decl;
+            children[0].parent = node;
+            
+            children[1] = $method_decl_list;
+            children[1].parent = node;
+
+            node.setChildren(children);
+
+            node.returnFlattenedChildren = function() {
+                var arr = new Array();
+                arr[1] = children[0];
+                arr[0] = children[1].returnFlattenedChildren();
+                _.each(arr[0], function(item) {
+                    item.parent = node;
+                });
+                return _.flatten(arr);
+            };
 
             $$ = node;
 
@@ -1381,18 +1437,21 @@ method_decl_list
                 log();
             }
 
-
-            
+            node.returnFlattenedChildren = function() {
+                return [];
+            }
 
             $$ = node;
 
         }}
     ;
 
+
+// CHECKED 1
 method_decl
     : PUBLIC type_id '(' type_id_list ')' '{' var_decl_list statement_list RETURN expression ';' '}'
         {{
-            var node = new Node("method_decl", 1);
+            var node = new Node("METHOD_DECLARATION", 1);
             
             node.print = function() {
                 log("49) method_decl ::= PUBLIC type_id '(' type_id_list ')' '{' var_decl_list statement_list RETURN expression ';' '}'");
@@ -1400,6 +1459,33 @@ method_decl
             }
 
             node.desc = "public " + $type_id.desc + "(" + $type_id_list.desc + ") { " + $var_decl_list.desc + "   " + $statement_list.desc + "   return (" + $expression.desc + "; }";
+
+            // CHILDREN
+            var children = new Array();
+            children.push(new Leaf("LITERAL", "PUBLIC", node));
+            var type = $type_id.children[0];
+            type.parent = node;
+            var id = $type_id.children[1];
+            id.parent = node;
+            children.push(type);
+            children.push(id);
+            children.push(new Leaf("LITERAL", "(", node));
+            $type_id_list.parent = node;
+            children.push($type_id_list.returnFlattenedChildren());
+            children.push(new Leaf("LITERAL", ")", node));
+            children.push(new Leaf("LITERAL", "{", node));
+            $var_decl_list.parent = node;
+            children.push($var_decl_list.returnFlattenedChildren());
+            $statement_list.parent = node;
+            children.push($statement_list.returnFlattenedChildren());
+            children.push(new Leaf("LITERAL", "RETURN", node));
+            $expression.parent = node;
+            children.push($expression);
+            children.push(new Leaf("LITERAL", ";", node));
+            children.push(new Leaf("LITERAL", "}", node));
+            
+            node.setChildren(children);
+
 
             // log("VAR_DECL: ");
             // log($var_decl_list.returnFlattenedChildren());
@@ -1411,6 +1497,10 @@ method_decl
 
             // log("-------------")
             // log($statement_list.returnFlattenedChildren());
+            // log("-------------\n\n")
+            
+            // log("-------------")
+            // log(node);
             // log("-------------\n\n")
 
             $$ = node;

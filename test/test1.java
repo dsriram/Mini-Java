@@ -46,7 +46,7 @@ class Fact extends AnotherClass {
 }
 
 class Fact2 extends Fact {
-    public int ComputeFac() {
+    public int ComputeFac(int num, booool nums, boolean bool) {
         int x;
         return 0;
     }
@@ -54,8 +54,15 @@ class Fact2 extends Fact {
 
 
 class Fact3 extends Fact {
-    public int ComputeFac(int num, booool nums, boolean bool) {
-
+    bool x;
+    boolean y;
+    public int method1() {
+        return 0;
+    }
+    public int[] method2() {
+        return 0;
+    }
+    public some_type method3() {
         return 0;
     }
 }
