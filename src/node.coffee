@@ -41,6 +41,7 @@ class LocalNode
     if @children && @children.length
       childrenJSON = (child.printJSON() for child in @children)
     return {
+      "leaf": false
       @type
       childrenJSON
     }
@@ -65,6 +66,7 @@ class LocalLeaf extends LocalNode
 
   printJSON: ->
     return {
+      "leaf": true
       @type
       @value
     }
