@@ -118,7 +118,7 @@ goal
             node.desc = $main_class.desc + " " + $class_decl_list.desc;
 
             // CHILDREN
-            var children;
+            var children = new Array();
             
             children[0] = $main_class;
             children[0].parent = node;
@@ -554,7 +554,7 @@ expression
             node.desc = "new " + $ID + "()";
 
             // CHILDREN
-            var children;
+            var children = new Array();
             
             children[0] = new Leaf("new", "new", node);
             
@@ -634,7 +634,7 @@ type_id
             node.desc = $ID1 + " " + $ID2;
 
             // CHILDREN
-            var children;
+            var children = new Array();
             
             children[0] = new Leaf("type", $ID1, node);
             
@@ -659,7 +659,7 @@ type_id
             node.desc = $type.desc + " " + $ID;
 
             // CHILDREN
-            var children;
+            var children = new Array();
             
             children[0] = $type;
             children[0].parent = node;
