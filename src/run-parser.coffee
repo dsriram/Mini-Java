@@ -17,4 +17,6 @@ parser = new Parser grammar, {type:types['LALR(1)']}
 
 parserSource = parser.generate()
 
-parser.parse '.' + (fs.readFileSync '../test/test1.java', 'UTF8')
+asd = parser.parse '.' + (fs.readFileSync '../test/test1.java', 'UTF8')
+
+console.log asd

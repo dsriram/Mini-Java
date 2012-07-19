@@ -86,50 +86,53 @@ id                    [a-zA-Z][a-zA-Z0-9_]*
 
 start
     : initializer goal
+        {{
+            log("---end---");
+            return rootNode;
+        }}
     ;
 
 initializer
     : '.'
         {{
             log = console.log;
+            log("--start--");
             
             INCLUDE("node");
             Node = LocalNode;
             Leaf = LocalLeaf;
+            rootNode = new Node ("root", "root", null);
 
             INCLUDE("underscore");
             
-            root = new Node("root", "ROOT_NODE");
         }}
     ;
 
 goal
     : main_class class_decl_list EOF
         {{
-            var node = new Node ("goal", 1);
 
-            node.print = function() {
+            rootNode.print = function() {
                 log("goal ::= main_class class_decl_list EOF");
                 log("          \\_________|____ " + $main_class.desc);
                 log("                     \\___ " + $class_decl_list.desc);
                 log();
             }
             
-            node.desc = $main_class.desc + " " + $class_decl_list.desc;
+            rootNode.desc = $main_class.desc + " " + $class_decl_list.desc;
 
             // CHILDREN
             var children = new Array();
-            
             children[0] = $main_class;
-            children[0].parent = node;
+            children[0].parent = rootNode;
             
             children[1] = $class_decl_list;
-            children[1].parent = node;
+            children[1].parent = rootNode;
 //FIXME
-            node.setChildren(children);
+            rootNode.setChildren(children);
 
 
-            $$ = node;
+            $$ = rootNode;
         }}
     ;
 
