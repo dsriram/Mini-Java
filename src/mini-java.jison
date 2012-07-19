@@ -84,6 +84,7 @@ id                    [a-zA-Z][a-zA-Z0-9_]*
 
 %% /* language grammar */
 
+// CHECKED 1
 start
     : initializer goal
         {{
@@ -92,6 +93,7 @@ start
         }}
     ;
 
+// CHECKED 1
 initializer
     : '.'
         {{
@@ -108,6 +110,7 @@ initializer
         }}
     ;
 
+// CHECKED 1
 goal
     : main_class class_decl_list EOF
         {{
@@ -627,7 +630,7 @@ expression
 
 
 
-
+// CHECKED 1
 type
     : INT '[' ']'
         {{
@@ -643,6 +646,7 @@ type
         }}
     ;
 
+// CHECKED 1
 type_id
     : ID ID 
         {{
@@ -697,6 +701,7 @@ type_id
         }}
     ;
 
+// CHECKED 1
 type_id_list
     : type_id type_id_comma_list
         {{
@@ -710,6 +715,29 @@ type_id_list
 
             node.desc = $type_id.desc + " " + $type_id_comma_list.desc;
 
+
+            // CHILDREN
+            var children = new Array();
+            children[0] = $type_id;
+            children[0].parent = node;
+            
+            children[1] = new Leaf("LITERAL", ",", node);
+
+            children[2] = $type_id_comma_list;
+            children[2].parent = node;
+
+            node.setChildren(children);
+
+            node.returnFlattenedChildren = function() {
+                var arr = new Array();
+                arr[0] = children[0];
+                arr[2] = children[2].returnFlattenedChildren();
+                if (arr[2].length) {
+                    arr[1] = children[1];
+                }
+                return _.flatten(arr);
+            };
+
             $$ = node;
 
         }}
@@ -722,13 +750,16 @@ type_id_list
                 log();
             }
 
-            
+            node.returnFlattenedChildren = function() {
+                return [];
+            }
 
             $$ = node;
 
         }}
     ;
 
+// CHECKED 1
 type_id_comma_list
     : ',' type_id type_id_comma_list
         {{
@@ -740,8 +771,30 @@ type_id_comma_list
                 log();
             }
 
-
             node.desc = ", " + $type_id.desc + $type_id_comma_list.desc
+
+            // CHILDREN
+            var children = new Array();
+            children[0] = $type_id;
+            children[0].parent = node;
+            
+            children[1] = new Leaf("LITERAL", ",", node);
+
+            children[2] = $type_id_comma_list;
+            children[2].parent = node;
+
+            node.setChildren(children);
+
+            node.returnFlattenedChildren = function() {
+                var arr = new Array();
+                arr[0] = children[0];
+                arr[2] = children[2].returnFlattenedChildren();
+                if (arr[2].length) {
+                    arr[1] = children[1];
+                }
+                return _.flatten(arr);
+            };
+
 
             $$ = node;
 
@@ -755,8 +808,10 @@ type_id_comma_list
                 log();
             }
 
+            node.returnFlattenedChildren = function() {
 
-            
+                return [];
+            };
 
             $$ = node;
 
@@ -1075,10 +1130,13 @@ method_decl
 
             node.desc = "public " + $type_id.desc + "(" + $type_id_list.desc + ") { " + $var_decl_list.desc + "   " + $statement_list.desc + "   return (" + $expression.desc + ";}";
 
-            log("VAR_DECL: ");
-            log($var_decl_list.returnFlattenedChildren());
-            log("</EOF>\n\n");
-                
+            // log("VAR_DECL: ");
+            // log($var_decl_list.returnFlattenedChildren());
+            // log("</EOF>\n\n");
+
+            // log("---- type-id-list -----");
+            // log($type_id_list.returnFlattenedChildren());
+            // log("---- list-end -----\n\n");
 
             $$ = node;
 
