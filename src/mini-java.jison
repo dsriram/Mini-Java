@@ -631,15 +631,15 @@ expression
 type
     : INT '[' ']'
         {{
-            $$ = new Leaf("type", "int[]");
+            $$ = new Leaf("TYPE", "INT[]");
         }}
     | BOOLEAN
         {{
-            $$ = new Leaf("type", "boolean");
+            $$ = new Leaf("TYPE", "BOOLEAN");
         }}
     | INT
         {{
-            $$ = new Leaf("type", "int");
+            $$ = new Leaf("TYPE", "INT");
         }}
     ;
 
@@ -660,9 +660,9 @@ type_id
             // CHILDREN
             var children = new Array();
             
-            children[0] = new Leaf("type", $ID1, node);
+            children[0] = new Leaf("TYPE", $ID1, node);
             
-            children[1] = new Leaf("id", $ID2, node);
+            children[1] = new Leaf("ID", $ID2, node);
 
             node.setChildren(children);
 
@@ -680,7 +680,7 @@ type_id
                 log();
             }
 
-            node.desc = $type.desc + " " + $ID;
+            node.desc = $type.value + " " + $ID;
 
             // CHILDREN
             var children = new Array();
@@ -688,7 +688,7 @@ type_id
             children[0] = $type;
             children[0].parent = node;
             
-            children[1] = new Leaf("id", $ID, node);
+            children[1] = new Leaf("ID", $ID, node);
 
             node.setChildren(children);
 
@@ -765,7 +765,7 @@ type_id_comma_list
 
 
 
-
+// CHECKED 1
 var_decl_list
     : var_decl_list var_decl /* used left recursion to fix shift/reduce conflict! */
         {{
@@ -777,8 +777,24 @@ var_decl_list
                 log();
             }
 
+            node.desc = $var_decl_list.desc + " " + $var_decl.desc;
 
-            node.desc = $var_decl_list.desc + " " + $var_decl.desc
+            // CHILDREN
+            var children = new Array();
+            children[0] = $var_decl_list;
+            children[0].parent = node;
+            
+            children[1] = $var_decl;
+            children[1].parent = node;
+
+            node.setChildren(children);
+
+            node.returnFlattenedChildren = function() {
+                var arr = new Array();
+                arr[1] = children[1];
+                arr[0] = children[0].returnFlattenedChildren();
+                return _.flatten(arr);
+            };
 
             $$ = node;
 
@@ -792,14 +808,16 @@ var_decl_list
                 log();
             }
 
-
-            
+            node.returnFlattenedChildren = function() {
+                return [];
+            }
 
             $$ = node;
 
         }}
     ;
 
+// CHECKED 1
 var_decl
     : type_id ';'
         {{
@@ -813,6 +831,16 @@ var_decl
 
             node.desc = $type_id.desc + ";";
 
+            // CHILDREN
+            var children = new Array();
+            children[0] = $type_id.children[0];
+            children[0].parent = node;
+            children[1] = $type_id.children[1];
+            children[1].parent = node;
+            children[2] = new Leaf("LITERAL", ";", node);
+
+            node.setChildren(children);
+
             $$ = node;
 
         }}
@@ -821,6 +849,7 @@ var_decl
 
 
 
+// CHECKED 1
 main_class
     : CLASS ID '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' ID ')' '{' statement_list '}' '}'
         {{
@@ -861,7 +890,7 @@ main_class
             children.push(new Leaf("LITERAL", "}", node));
 
             node.setChildren(children);
-            log('---------');log(node);log('---------');log();
+            //log('---------statement');log(node);log('---------');log();
 
             $$ = node;
         }}
@@ -957,7 +986,7 @@ class_decl
             children[i] = new Leaf("LITERAL", "}", node);
 
             node.setChildren(children);
-            //log('---------');log(node);log('---------');log();
+            //log('---------class_decl');log(node);log('---------');log();
 
             $$ = node;
 
@@ -1044,8 +1073,12 @@ method_decl
                 log();
             }
 
-
             node.desc = "public " + $type_id.desc + "(" + $type_id_list.desc + ") { " + $var_decl_list.desc + "   " + $statement_list.desc + "   return (" + $expression.desc + ";}";
+
+            log("VAR_DECL: ");
+            log($var_decl_list.returnFlattenedChildren());
+            log("</EOF>\n\n");
+                
 
             $$ = node;
 

@@ -9,8 +9,12 @@ class Fact extends AnotherClass {
     public int ComputeFac(int num) {
         int num_aux;
         booleana yy_var;
+        boolean yy_var2;
+        int[] yy_var3;
+        
         ff = new int[10];
         fg = true[true];
+        
         if (num < 1)
             num_aux = 1;
         else 
@@ -24,7 +28,7 @@ class Fact extends AnotherClass {
 
 class Fact2 extends Fact {
     public int ComputeFac(int num, int[] nums, boolean bool) {
-
+        int x;
         return 0;
     }
 }
