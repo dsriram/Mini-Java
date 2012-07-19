@@ -1,6 +1,7 @@
 class Factorial {
     public static void main(String[] args) {
         System.out.println(new Fact().ComputeFac(10).fun().length);
+        System.out.println(new Fact().ComputeFac(10).fun().length);
     }
 }
 
@@ -22,6 +23,14 @@ class Fact extends AnotherClass {
 }
 
 class Fact2 extends Fact {
+    public int ComputeFac(int num, int[] nums, boolean bool) {
+
+        return 0;
+    }
+}
+
+
+class Fact3 extends Fact {
     public int ComputeFac(int num, int[] nums, boolean bool) {
 
         return 0;

@@ -19,4 +19,4 @@ parserSource = parser.generate()
 
 asd = parser.parse '.' + (fs.readFileSync '../test/test1.java', 'UTF8')
 
-console.log asd
+# console.log asd

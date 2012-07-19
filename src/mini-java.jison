@@ -101,7 +101,7 @@ initializer
             INCLUDE("node");
             Node = LocalNode;
             Leaf = LocalLeaf;
-            rootNode = new Node ("root", "root", null);
+            rootNode = new Node ("ROOT_NODE", null, null);
 
             INCLUDE("underscore");
             
@@ -125,12 +125,16 @@ goal
             var children = new Array();
             children[0] = $main_class;
             children[0].parent = rootNode;
-            
-            children[1] = $class_decl_list;
-            children[1].parent = rootNode;
-//FIXME
-            rootNode.setChildren(children);
 
+            var classes = $class_decl_list.returnFlattenedChildren();
+            var i = 1;
+            _.each(classes, function(class_decl) {
+                children[i] = class_decl;
+                children[i].parent = rootNode;
+                i++;
+            });
+
+            rootNode.setChildren(children);
 
             $$ = rootNode;
         }}
@@ -151,6 +155,23 @@ statement_list /* == (statement)* */
             }
             node.desc = $statement.desc + $statement_list.desc;
 
+            // CHILDREN
+            var children = new Array();
+            children[0] = $statement;
+            children[0].parent = node;
+            
+            children[1] = $statement_list;
+            children[1].parent = node;
+
+            node.setChildren(children);
+
+            node.returnFlattenedChildren = function() {
+                var arr = new Array();
+                arr[0] = children[0];
+                arr[1] = children[1].returnFlattenedChildren();
+                return _.flatten(arr);
+            };
+
             $$ = node;
         }}
     |
@@ -162,9 +183,9 @@ statement_list /* == (statement)* */
                 log();
             }
             
-            node.desc = "";
-
-            // NO CHILDREN
+            node.returnFlattenedChildren = function() {
+                return [];
+            }
 
             $$ = node;
             
@@ -292,7 +313,7 @@ expression_list /* == ( expression (',' expression)* )* */
                 log();
             }
 
-            node.desc = "";
+            
 
             $$ = node;
             
@@ -324,7 +345,7 @@ expression_comma_list
                 log();
             }
 
-            node.desc = "";
+            
 
             $$ = node;
             
@@ -701,7 +722,7 @@ type_id_list
                 log();
             }
 
-            node.desc = "";
+            
 
             $$ = node;
 
@@ -735,7 +756,7 @@ type_id_comma_list
             }
 
 
-            node.desc = "";
+            
 
             $$ = node;
 
@@ -772,7 +793,7 @@ var_decl_list
             }
 
 
-            node.desc = "";
+            
 
             $$ = node;
 
@@ -812,7 +833,34 @@ main_class
                 log();
             }
 
-            node.desc = "Main class: " + $ID;
+            node.desc = "Main class: " + $ID1;
+
+            node.className = $ID1;
+
+
+            // CHILDREN
+            var children = new Array();
+            children.push(new Leaf("LITERAL", "CLASS", node));
+            children.push(new Leaf("ID", $ID1, node));
+            children.push(new Leaf("LITERAL", "{", node));
+            children.push(new Leaf("LITERAL", "PUBLIC", node));
+            children.push(new Leaf("LITERAL", "STATIC", node));
+            children.push(new Leaf("LITERAL", "VOID", node));
+            children.push(new Leaf("LITERAL", "MAIN", node));
+            children.push(new Leaf("LITERAL", "(", node));
+            children.push(new Leaf("LITERAL", "STRING[]", node));
+            children.push(new Leaf("ID", $ID2, node));
+            children.push(new Leaf("LITERAL", ")", node));
+            children.push(new Leaf("LITERAL", "{", node));
+            if ($statement_list.subtype == 1) {
+                children.push($statement_list.returnFlattenedChildren());
+                children = _.flatten(children);
+            }
+            children.push(new Leaf("LITERAL", "}", node));
+            children.push(new Leaf("LITERAL", "}", node));
+
+            node.setChildren(children);
+            log('---------');log(node);log('---------');log();
 
             $$ = node;
         }}
@@ -822,6 +870,7 @@ main_class
 
 
 
+// CHECKED 1
 class_decl_list
     : class_decl class_decl_list
         {{
@@ -832,8 +881,24 @@ class_decl_list
                 log();
             }
 
+            node.desc = $class_decl.desc + " " + $class_decl_list.desc;
 
-            node.desc = $class_decl.desc + "        " + $class_decl_list.desc;
+            // CHILDREN
+            var children = new Array();
+            children[0] = $class_decl;
+            children[0].parent = node;
+            
+            children[1] = $class_decl_list;
+            children[1].parent = node;
+
+            node.setChildren(children);
+
+            node.returnFlattenedChildren = function() {
+                var arr = new Array();
+                arr[0] = children[0];
+                arr[1] = children[1].returnFlattenedChildren();
+                return _.flatten(arr);
+            };
 
             $$ = node;
 
@@ -848,7 +913,9 @@ class_decl_list
             }
 
 
-            node.desc = "";
+            node.returnFlattenedChildren = function() {
+                return [];
+            };
 
             $$ = node;
 
@@ -866,14 +933,37 @@ class_decl
                 log();
             }
 
-
             node.desc = "Class: " + $ID;
+            
+            node.className = $ID;
+
+
+            // CHILDREN
+            var children = new Array();
+            children[0] = new Leaf("LITERAL", "CLASS", node);
+            children[1] = new Leaf("ID", $ID, node);
+            if ($class_extension_signature.subtype == 1) {
+                children[2] = new Leaf("LITERAL", "EXTENDS", node);
+                children[3] = new Leaf("ID", $class_extension_signature.extendedClassName, node);
+            }
+            children[4] = new Leaf("LITERAL", "{", node);
+            
+            var i = 5;
+// FIXME
+            //children[4] = new Leaf("LITERAL", "{", node);
+            //children[4] = new Leaf("LITERAL", "{", node);
+            
+            children[i] = new Leaf("LITERAL", "}", node);
+
+            node.setChildren(children);
+            //log('---------');log(node);log('---------');log();
 
             $$ = node;
 
         }}
     ;
 
+// CHECKED 1
 class_extension_signature
     : EXTENDS ID 
         {{
@@ -885,8 +975,9 @@ class_extension_signature
                 log();
             }
 
-
             node.desc = "extends " + $ID;
+
+            node.extendedClassName = $ID;
 
             $$ = node;
 
@@ -900,13 +991,11 @@ class_extension_signature
                 log();
             }
 
-
-            node.desc = "";
-
             $$ = node;
 
         }}
     ;
+
 
 
 
@@ -937,7 +1026,7 @@ method_decl_list
             }
 
 
-            node.desc = "";
+            
 
             $$ = node;
 
