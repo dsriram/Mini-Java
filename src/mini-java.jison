@@ -853,8 +853,9 @@ main_class
             children.push(new Leaf("LITERAL", ")", node));
             children.push(new Leaf("LITERAL", "{", node));
             if ($statement_list.subtype == 1) {
-                children.push($statement_list.returnFlattenedChildren());
-                children = _.flatten(children);
+                var statement = new Node("STATEMENT", 1, node);
+                statement.setChildren($statement_list.returnFlattenedChildren());
+                children.push(statement);
             }
             children.push(new Leaf("LITERAL", "}", node));
             children.push(new Leaf("LITERAL", "}", node));
