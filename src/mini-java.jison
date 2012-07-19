@@ -143,7 +143,7 @@ goal
 
 
 
-
+// CHECKED 1
 statement_list /* == (statement)* */
     : statement statement_list
         {{
@@ -170,6 +170,9 @@ statement_list /* == (statement)* */
                 var arr = new Array();
                 arr[0] = children[0];
                 arr[1] = children[1].returnFlattenedChildren();
+                _.each(arr[1], function(item) {
+                    item.parent = node;
+                });
                 return _.flatten(arr);
             };
 
@@ -193,6 +196,7 @@ statement_list /* == (statement)* */
         }}
     ;
 
+// CHECKED 1
 statement
     : '{' statement_list '}'
         {{
@@ -205,6 +209,22 @@ statement
             }
             
             node.desc = "{ " + $statement_list.desc + " }";
+
+            // CHILDREN
+            var children = new Array();
+
+            children.push(new Leaf("LITERAL", "{", node));
+            var statements = $statement_list.returnFlattenedChildren();
+            _.each(statements, function(item) {
+                item.parent = node;
+            });
+            children.push(statements);
+            children.push(new Leaf("LITERAL", "}", node));
+            children = _.flatten(children);
+            // log('CHILDREN: ' + children);
+
+            node.setChildren(children);
+            
 
             $$ = node;
             
@@ -222,7 +242,23 @@ statement
             }
 
             node.desc = "IF (" + $expression.desc + " ) " + $statement1.desc + " ELSE " + $statement2.desc;
+            
+            // CHILDREN
+            var children = new Array();
 
+            children.push(new Leaf("LITERAL", "IF", node));
+            children.push(new Leaf("LITERAL", "(", node));
+            $expression.parent = node;
+            children.push($expression);
+            children.push(new Leaf("LITERAL", ")", node));
+            $statement1.parent = node;
+            children.push($statement1);
+            children.push(new Leaf("LITERAL", "ELSE", node));
+            $statement2.parent = node;
+            children.push($statement2);
+            
+            node.setChildren(children);
+            
             $$ = node;
         }}
     | WHILE '(' expression ')' statement
@@ -236,6 +272,19 @@ statement
             }
             
             node.desc = "WHILE ( " + $expression.desc + " ) " + $statement.desc;
+            
+            // CHILDREN
+            var children = new Array();
+
+            children.push(new Leaf("LITERAL", "WHILE", node));
+            children.push(new Leaf("LITERAL", "(", node));
+            $expression.parent = node;
+            children.push($expression);
+            children.push(new Leaf("LITERAL", ")", node));
+            $statement.parent = node;
+            children.push($statement);
+            
+            node.setChildren(children);
 
             $$ = node;
         }}
@@ -251,6 +300,18 @@ statement
 
             node.desc = "SYSO ( " + $expression.desc + " ) ;";
 
+            // CHILDREN
+            var children = new Array();
+
+            children.push(new Leaf("LITERAL", "System.out.println", node));
+            children.push(new Leaf("LITERAL", "(", node));
+            $expression.parent = node;
+            children.push($expression);
+            children.push(new Leaf("LITERAL", ")", node));
+            children.push(new Leaf("LITERAL", ";", node));
+            
+            node.setChildren(children);
+
             $$ = node;
         }}
     | ID '=' expression ';'
@@ -265,6 +326,17 @@ statement
             }
             
             node.desc = $ID + " = (" + $expression.desc + ")";
+
+            // CHILDREN
+            var children = new Array();
+
+            children.push(new Leaf("ID", $ID, node));
+            children.push(new Leaf("LITERAL", "=", node));
+            $expression.parent = node;
+            children.push($expression);
+            children.push(new Leaf("LITERAL", ";", node));
+            
+            node.setChildren(children);
 
             $$ = node;
             
@@ -282,6 +354,21 @@ statement
             }
 
             node.desc = $ID + "[ (" + $expression1.desc + ") ] = (" + $expression2.desc + ");";
+
+            // CHILDREN
+            var children = new Array();
+
+            children.push(new Leaf("ID", $ID, node));
+            children.push(new Leaf("LITERAL", "[", node));
+            $expression1.parent = node;
+            children.push($expression1);
+            children.push(new Leaf("LITERAL", "]", node));
+            children.push(new Leaf("LITERAL", "=", node));
+            $expression2.parent = node;
+            children.push($expression2);
+            children.push(new Leaf("LITERAL", ";", node));
+            
+            node.setChildren(children);
 
             $$ = node;
             
@@ -732,6 +819,9 @@ type_id_list
                 arr[2] = children[2].returnFlattenedChildren();
                 if (arr[2].length) {
                     arr[1] = children[1];
+                    _.each(arr[2], function(item) {
+                        item.parent = node;
+                    });
                 }
                 return _.flatten(arr);
             };
@@ -789,6 +879,9 @@ type_id_comma_list
                 arr[2] = children[2].returnFlattenedChildren();
                 if (arr[2].length) {
                     arr[1] = children[1];
+                    _.each(arr[2], function(item) {
+                        item.parent = node;
+                    });
                 }
                 return _.flatten(arr);
             };
@@ -846,6 +939,9 @@ var_decl_list
                 var arr = new Array();
                 arr[1] = children[1];
                 arr[0] = children[0].returnFlattenedChildren();
+                _.each(arr[0], function(item) {
+                    item.parent = node;
+                });
                 return _.flatten(arr);
             };
 
@@ -937,6 +1033,7 @@ main_class
             if ($statement_list.subtype == 1) {
                 var statement = new Node("STATEMENT", 1, node);
                 statement.setChildren($statement_list.returnFlattenedChildren());
+                //log($statement_list.returnFlattenedChildren());
                 children.push(statement);
             }
             children.push(new Leaf("LITERAL", "}", node));
@@ -980,6 +1077,9 @@ class_decl_list
                 var arr = new Array();
                 arr[0] = children[0];
                 arr[1] = children[1].returnFlattenedChildren();
+                _.each(arr[1], function(item) {
+                    item.parent = node;
+                });
                 return _.flatten(arr);
             };
 
@@ -1126,7 +1226,7 @@ method_decl
                 log();
             }
 
-            node.desc = "public " + $type_id.desc + "(" + $type_id_list.desc + ") { " + $var_decl_list.desc + "   " + $statement_list.desc + "   return (" + $expression.desc + ";}";
+            node.desc = "public " + $type_id.desc + "(" + $type_id_list.desc + ") { " + $var_decl_list.desc + "   " + $statement_list.desc + "   return (" + $expression.desc + "; }";
 
             // log("VAR_DECL: ");
             // log($var_decl_list.returnFlattenedChildren());
@@ -1135,6 +1235,10 @@ method_decl
             // log("---- type-id-list -----");
             // log($type_id_list.returnFlattenedChildren());
             // log("---- list-end -----\n\n");
+
+            // log("-------------")
+            // log($statement_list.returnFlattenedChildren());
+            // log("-------------\n\n")
 
             $$ = node;
 

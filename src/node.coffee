@@ -9,10 +9,13 @@ class LocalNode
   # children
   # -------------------------
   addChild: (childNode) ->
+    childNode.parent = @
     @children.push childNode
     return @children
   
   setChildren: (childNodes) ->
+    _.each childNodes, (item)->
+      item.parent = @
     @children = childNodes
     return @children
   

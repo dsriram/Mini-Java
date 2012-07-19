@@ -1,7 +1,17 @@
 class Factorial {
     public static void main(String[] args) {
         System.out.println(new Fact().ComputeFac(10).fun().length);
-        System.out.println(new Fact().ComputeFac(10).fun().length);
+        if (true)
+            alpha = b;
+        else {
+            a = b-2;
+            b = a+2;
+            c = a+2;
+            {
+                x = a.length - 1;
+                y[1+2*4] = a+2;
+            }
+        }
     }
 }
 
@@ -14,14 +24,23 @@ class Fact extends AnotherClass {
         
         ff = new int[10];
         fg = true[true];
+        fg[1] = 2-3;
         
         if (num < 1)
             num_aux = 1;
-        else 
-            num_aux = num * (this.ComputeFac(num-1));
-            num_aux = num * (this.ComputeFac(num-1));
-            num_aux = num * (this.ComputeFac(num-1));
-            num_aux = num * (this.ComputeFac(num-1));
+        else {
+            num_aux1 = num * (this.ComputeFac(num-1));
+            num_aux2 = num * (this.ComputeFac(num-1));
+        }
+        num_aux3 = num * (this.ComputeFac(num-1));
+        while (num.length)
+            if (x)
+                num_aux4 = num * (this.ComputeFac(num-1));
+            else
+                y = 1;
+        
+        System.out.println(this.func(2));
+
         return num_aux;
     }
 }
