@@ -1,7 +1,7 @@
 # NODE
 # ==============================================================================
 class LocalNode
-  constructor: (@type, @subtype, @parent) ->
+  constructor: (@rule, @rule_number, @parent) ->
     @children = []
     @scope = {}
     @desc = ''
@@ -44,7 +44,7 @@ class LocalNode
     
     return {
       'leaf': false
-      @type
+      @rule
       childrenJSON
     }
 
@@ -55,8 +55,8 @@ class LocalNode
     return {
       'leaf': false
       @id
-      @type
-      @subtype
+      @rule
+      @rule_number
       @scope
       parent: if @parent then @parent.id else 'undefined'
       childrenJSON
@@ -87,8 +87,8 @@ class LocalNode
 # LEAF
 # ==============================================================================
 class LocalLeaf extends LocalNode
-  constructor: (@type, @value, @parent) ->
-    @desc = "LEAF [ #{type} : #{value} ]"
+  constructor: (@rule, @value, @parent) ->
+    @desc = "LEAF [ #{rule} : #{value} ]"
     @id = @randomID()
 
   print: ->
@@ -97,7 +97,7 @@ class LocalLeaf extends LocalNode
   printAbbrevJSON: ->
     return {
       'leaf': true
-      @type
+      @rule
       @value
     }
 
@@ -105,7 +105,7 @@ class LocalLeaf extends LocalNode
     return {
       'leaf': true
       @id
-      @type
+      @rule
       @value
       parent: if @parent then @parent.id else 'undefined'
     }

@@ -1235,7 +1235,7 @@ main_class
             children.push(new Leaf("ID", $ID2, node));
             children.push(new Leaf("LITERAL", ")", node));
             children.push(new Leaf("LITERAL", "{", node));
-            if ($statement_list.subtype == 1) {
+            if ($statement_list.rule_number == 1) {
                 var statement = new Node("STATEMENT", 1, node);
                 var statements = $statement_list.returnFlattenedChildren();
                 _.each(statements, function(item) {
@@ -1339,7 +1339,7 @@ class_decl
             var children = new Array();
             children.push(new Leaf("LITERAL", "CLASS", node));
             children.push(new Leaf("ID", $ID, node));
-            if ($class_extension_signature.subtype == 1) {
+            if ($class_extension_signature.rule_number == 1) {
                 children.push(new Leaf("LITERAL", "EXTENDS", node));
                 children.push(new Leaf("ID", $class_extension_signature.extendedClassName, node));
             }
