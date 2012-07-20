@@ -385,7 +385,7 @@ statement
                 $expression.resolveType();
                 if ($expression.type !== "int") {
                     var error = "";
-                    error += "System.out.println(" + $expression + ");";
+                    error += "System.out.println(" + $expression.desc + ");";
                     error += "\n";
                     error += "                   ^~-- type should be 'int'";
                     log("\n" + error + "\n");
@@ -666,11 +666,11 @@ expression
             
             // VALIDATION
             node.validate = function() {
-                if (node.type === "undefined") {
+                if (node.type !== "boolean") {
                     var error = "";
-                    error += "& exp...";
+                    error += $expression1.desc + " && " + $expression2.desc;
                     error += "\n";
-                    error += "              ^~-- type should be 'boolean'";
+                    error += "           ^~-- type should be 'boolean'";
                     log("\n" + error + "\n");
                     return false;
                 }
@@ -717,11 +717,11 @@ expression
             // VALIDATION
             node.validate = function() {
                 this.resolveType();
-                if (node.type === "undefined") {
+                if (node.type !== "boolean") {
                     var error = "";
-                    error += "< exp...";
+                    error += $expression1.desc + " < " + $expression2.desc;
                     error += "\n";
-                    error += "              ^~-- type should be 'int'";
+                    error += "        ^~-- type should be 'int'";
                     log("\n" + error + "\n");
                     return false;
                 }
@@ -767,9 +767,9 @@ expression
 
             // VALIDATION
             node.validate = function() {
-                if (node.type === "undefined") {
+                if (node.type !== "int") {
                     var error = "";
-                    error += "+ exp...";
+                    error += $expression1.desc + " + " + $expression2.desc;
                     error += "\n";
                     error += "              ^~-- type should be 'int'";
                     log("\n" + error + "\n");
@@ -817,9 +817,9 @@ expression
             
             // VALIDATION
             node.validate = function() {
-                if (node.type === "undefined") {
+                if (node.type !== "int") {
                     var error = "";
-                    error += "- exp...";
+                    error += $expression1.desc + " - " + $expression2.desc;
                     error += "\n";
                     error += "              ^~-- type should be 'int'";
                     log("\n" + error + "\n");
@@ -868,9 +868,9 @@ expression
             
             // VALIDATION
             node.validate = function() {
-                if (node.type === "undefined") {
+                if (node.type !== "undefined") {
                     var error = "";
-                    error += "* exp...";
+                    error += $expression1.desc + " * " + $expression2.desc;
                     error += "\n";
                     error += "              ^~-- type should be 'int'";
                     log("\n" + error + "\n");
@@ -915,25 +915,21 @@ expression
                 $expression2.resolveType();
 
                 if ($expression2.type === "int") {
-                    this.type = "I DONT KNOW";
-// fix
+                    this.type = "valid";
                 }
 
             };
             
             // VALIDATION
             node.validate = function() {
-                /*
-                if (node.type === "undefined") {
-//fix
+                if (node.type !== "undefined") {
                     var error = "";
-                    error += "exp [ exp...";
+                    error += $expression1.desc + " [ " + $expression2.desc + " ] ...";
                     error += "\n";
-                    error += "              ^~-- type should be 'int'";
+                    error += "     ^~-- type should be 'int'";
                     log("\n" + error + "\n");
                     return false;
                 }
-                */
                 return this.validateChildren();
             };
 
@@ -963,34 +959,7 @@ expression
             node.setChildren(children);
             
      
-            node.type = "unknown";
-
-            node.resolveType = function() {
-                $expression.resolveType();;
-
-                //if ($expression.type === "int") {
-                    this.type = "int";
-// fix
-                //}
-
-            };
-            
-            // VALIDATION
-            node.validate = function() {
-                /*
-                if (node.type === "undefined") {
-//fix
-                    var error = "";
-                    error += "exp . length";
-                    error += "\n";
-                    error += "           ^~-- type should be 'int'";
-                    log("\n" + error + "\n");
-                    return false;
-                }
-                */
-                return this.validateChildren();
-            };
-
+            node.type = "int";
 
             $$ = node;
             
@@ -1199,13 +1168,11 @@ expression
 
             node.type = "unknown";
 
-            node.validate = function() {
-//fix
-            };
-
 
             node.resolveType = function() {
-//fix
+                var type = this.searchForVariableInScope($ID);
+                if (type)
+                    this.type = type.type;
             };
             
             $$ = node;
@@ -1240,7 +1207,7 @@ expression
             node.validate = function() {
                 if ($expression.type !== "boolean") {
                     var error = "";
-                    error += "! " + $expression;
+                    error += "! " + $expression.desc;
                     error += "\n";
                     error += "  ^~-- type should be 'boolean'";
                     log("\n" + error + "\n");
