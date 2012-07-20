@@ -105,7 +105,6 @@ start
 
 
             console.log("---end---");
-            log("--end--");
             
             return {"log":output_log, "root_node":rootNode};
         }}
@@ -116,12 +115,10 @@ initializer
     : '.'
         {{
             output_log = "";
-            window.msg="";
             // log = console.log;
-            log = function(message) { output_log += message + "\n"; window.msg+=message+"<br/>"; }
+            log = function(message) { output_log += message + "\n"; }
 
             console.log("--start--");
-            log("--start--");
             
             INCLUDE("node");
             Node = LocalNode;
