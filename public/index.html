@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
+<title>Mini Java</title>
+<link rel="stylesheet" type="text/css" href="styles/tabs_style.css"/>
+<link rel="stylesheet" type="text/css" href="styles/usf.css"/>
+<link type="text/css" rel="stylesheet" href="styles/style.css"/>
+<script type="text/javascript" src="scripts/d3.js"></script>
+<script type="text/javascript" src="scripts/d3.layout.js"></script>
+<script type="text/javascript" src="scripts/jquery.js"></script>
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript" src="scripts/tabs_script.js"></script>
+<script type="text/javascript" src="scripts/es5.js"></script>
+<script type="text/javascript" src="scripts/jison.js"></script>
+<script type="text/javascript" src="scripts/json2.js"></script>
+<script type="text/javascript" src="scripts/myd3.js"></script>
+<script type="text/javascript" src="scripts/usf.js"></script>
+
+</head>
+<body>
+<div id="wrapper">
+	<h1>Mini Java Project<small>By Pooria Azimi & Salim Malakouti</small></h1>
+	<div style="margin-top:50px; padding:20px 20px 20px 400px; background-color:#EEE; border-style:solid; border-width: 1px 0px 1px 0px; " >Upload Your Program and Click on Parse it!<br><br>Parser type: <select id="type" style="display:none">
+        <option value="lr0">LR(0)</option>
+        <option value="slr">SLR(1)</option>
+        <option value="lalr" selected=true>LALR(1)</option>
+        <option value="lr">LR(1)</option>
+        <option value="ll">LL(1)</option>
+      </select></br><br><input  id="code_uploader" type="file" style=" " ><button id="process_btn" >Parse it!</button></div>
+	<div id="content">
+		<div id="menu">
+			<ul>
+				<li><a href="#" title="ast" class="active">AST</a></li>
+				<li><a href="#" title="nonterminals" >Nonterminals</a></li>
+				<li><a href="#" title="productions" >Productions</a></li>
+				<li><a href="#" title="table">Table</a></li>
+				<li><a href="#" title="logs">Logs</a></li>
+				<li><a href="#" title="about_us">About us</a></li>
+			</ul>
+		</div>
+		<div class="main" id="ast">
+			<h3 id="main_title">AST</h3>
+			<div id="body" class="main_content" style="width:90%; margin-left:5%; margin-top:20px;">Parse your file in order to see the results	</div>			
+		</div>
+		<div class="main" id="nonterminals">
+			<h3 id="main_title">Noneterminals</h3>
+			<div class="main_content" style="width:90%; margin-left:5%; margin-top:20px;">Parse your file in order to see the results</div>			
+		</div>
+		<div class="main" id="productions">
+			<h3 id="main_title">Productoins</h3>
+			<div class="main_content" style="width:90%; margin-left:5%; margin-top:20px;">Parse your file in order to see the results</div>			
+		</div>
+		<div class="main" id="table">
+			<h3 id="main_title">Table</h3>
+			<div class="main_content" style="width:90%; margin-left:5%; margin-top:20px;">Parse your file in order to see the results </div>			
+		</div>
+		<div class="main" id="logs">
+			<h3 id="main_title">Logs</h3>
+			<div class="main_content" id="logs_content" style="width:90%; margin-left:5%; margin-top:20px; color:red;">This Project is implemented by Pooria Azimi and Salim Malakouti.</div>			
+		</div>
+		<div class="main" id="about_us">
+			<h3 id="main_title">About us</h3>
+			<div class="main_content" style="width:90%; margin-left:5%; margin-top:20px;">This Project is implemented by Pooria Azimi and Salim Malakouti.</div>			
+		</div>
+
+	</div>
+</div>
+</body>
+</html>
