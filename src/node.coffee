@@ -56,7 +56,7 @@ class LocalNode
 
   printAbbrevJSON: ->
     @resolveType()
-    
+
     if @children && @children.length
       childrenJSON = (child.printAbbrevJSON() for child in @children)
     
@@ -78,9 +78,25 @@ class LocalNode
       @type
       @rule_number
       @scope
-      parent: if @parent then @parent.id else 'undefined'
+      'parent': if @parent then @parent.id else 'undefined'
       childrenJSON
     }
+
+  printD3: ->
+    @resolveType()
+    if @children && @children.length
+      childrenJSON = (child.printD3() for child in @children)
+    
+    obj = {
+      'leaf': false
+      'name': @rule
+      @scope
+      'children': childrenJSON
+    }
+    if (@type) then obj['type'] = @type
+    return obj
+
+  
 
   randomID: ->
     return Math.random().toString(36).substring(2,9)
@@ -146,8 +162,17 @@ class LocalLeaf extends LocalNode
       @id
       @type
       @value
-      parent: if @parent then @parent.id else 'undefined'
+      'parent': if @parent then @parent.id else 'undefined'
     }
+
+  printD3: ->
+    @resolveType()
+    obj = {
+      'leaf': true
+      'name': @value
+    }
+    if (@type) then obj['type'] = @type
+    return obj
   
   validate: ->
     return true;

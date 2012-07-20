@@ -20,4 +20,4 @@ parserSource = parser.generate()
 res = parser.parse '.' + (fs.readFileSync '../test/test1.java', 'UTF8')
 
 console.log res.log 
-console.log res.root_node
+console.log JSON.stringify(res.root_node.printD3(), null, 4)
