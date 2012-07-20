@@ -37,7 +37,7 @@ class Fact extends AnotherClass {
             else
                 y = 1;
         
-        System.out.println(this.func(222));
+        System.out.println(1+2+3*4);
 
         return num_aux;
     }
@@ -54,6 +54,7 @@ class Fact2 extends Fact {
 class Fact3 extends Fact {
     bool x;
     boolean y;
+    int method1;
     public int method1() {
         return 0;
     }
@@ -64,6 +65,9 @@ class Fact3 extends Fact {
         int zzz;
         zzz = this.method1();
         return 0;
+    }
+    public bool method2() {
+        return 1;
     }
 }
 

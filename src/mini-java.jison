@@ -93,20 +93,20 @@ id                    [a-zA-Z][a-zA-Z0-9_]*
 start
     : initializer goal
         {{
-            log(JSON.stringify(rootNode.printJSON(), null, 4));
+            // log(JSON.stringify(rootNode.printJSON(), null, 4));
             
-            //log("\n\nCHECKING PARENTS:");
-            //var res = rootNode.checkChildren();
-            //log("RESULT: " + res + "\n\n");
+            //console.log("\n\nCHECKING PARENTS:");
+            //var res1 = rootNode.checkChildren();
+            //console.log("RESULT: " + res1 + "\n\n");
 
-            log("\n\nVALIDATING TYPES:");
-            var res = rootNode.validate();
-            log("RESULT: " + res + "\n\n");
+            // console.log("\n\nVALIDATING TYPES:");
+            var res2 = rootNode.validate();
+            // console.log("RESULT: " + res2 + "\n\n");
 
 
-            log("---end---");
+            console.log("---end---");
             
-            return rootNode;
+            return {"log":output_log, "root_node":rootNode};
         }}
     ;
 
@@ -114,8 +114,12 @@ start
 initializer
     : '.'
         {{
-            log = console.log;
-            log("--start--");
+            output_log = "";
+            log = console.log;/*function(message) {
+                output_log += message + "\n";
+            }*/
+
+            console.log("--start--");
             
             INCLUDE("node");
             Node = LocalNode;
@@ -142,8 +146,8 @@ goal
             rootNode.desc = $main_class.desc + " " + $class_decl_list.desc;
 
             // scope
-            rootNode.addVariableToScope = function(name, type, kind) {
-                this.scope[name] = {"type": type, "kind": type};
+            rootNode.addVariableToScope = function(name, type, kind, scope) {
+                this.scope[name] = {"type": type, "kind": type, "scope": scope};
             }
 
             // CHILDREN
@@ -156,7 +160,7 @@ goal
             _.each(classes, function(class_decl) {
                 class_decl.parent = rootNode;
                 children.push(class_decl);
-                rootNode.addVariableToScope($class_decl.className, "class", "class");
+                rootNode.addVariableToScope($class_decl.className, "class", "class", class_decl.scope);
             });
 
             rootNode.setChildren(children);
@@ -1750,7 +1754,12 @@ class_decl
 
             // scope
             node.addVariableToScope = function(name, type, kind) {
-                this.scope[name] = {"type": type, "kind": kind};
+                var existing = this.searchForVariableInScope(name);
+                if (existing.type) {
+                    log("Sorry, " + $ID + "! A " + existing.kind + " with the same name (" + name + ") already exists!");
+                } else {
+                    this.scope[name] = {"type": type, "kind": kind};
+                }
             }
 
 
@@ -1785,6 +1794,25 @@ class_decl
             node.addVariableToScope("this", "class", "class");
 
 
+
+            node.validate = function() {
+                if ($class_extension_signature.rule_number == 1) { // it's been extended
+                    var methods = $method_decl_list.returnFlattenedChildren();
+                    if (methods && methods.length) {
+                        _.each(methods, function(item) {
+                            var father_class_name = $class_extension_signature.extendedClassName;
+                            var father_class = rootNode.scope[father_class_name];
+                            if (father_class) {
+                                var overloaded_function = father_class.scope[item.methodName];
+                                if (overloaded_function && overloaded_function.kind === "method") {
+                                    log("Sorry, " + node.className + "! Your parent class (" + father_class_name + ") already has a method named " + item.methodName + "!");
+                                }
+                            }
+                        });
+                    }
+                }
+                return this.validateChildren();
+            }
 
             $$ = node;
 

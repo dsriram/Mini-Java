@@ -94,7 +94,7 @@ class LocalNode
     for child in @children
       # console.log "CHECKED " + child.id
       if child.parent.id != @id
-        console.log "PARENTAL ERROR: parent(#{@id}), child(id: #{child.id}, alleged-parent-id: #{child.parent.id})"
+        # console.log "PARENTAL ERROR: parent(#{@id}), child(id: #{child.id}, alleged-parent-id: #{child.parent.id})"
         return false
       result &&= child.checkChildren()
     return result
@@ -104,14 +104,14 @@ class LocalNode
     return @validateChildren()
 
   validateChildren: ->
-    console.log "VALIDATING      #{@id}  #{@rule}"
+    # console.log "VALIDATING      #{@id}  #{@rule}"
     
     return true if ! (@children?.length)
     
     for child in @children
       child.resolveType()
       res = child.validate()
-      console.log "VALIDATE CHILD  #{child.id}  #{child.rule} \t--> #{res}"
+      # console.log "VALIDATE CHILD  #{child.id}  #{child.rule} \t--> #{res}"
       return false if !res
     return true
 
