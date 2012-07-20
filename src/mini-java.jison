@@ -94,6 +94,11 @@ start
     : initializer goal
         {{
             log(JSON.stringify(rootNode.printJSON(), null, 4));
+            
+            log("\n\nCHECKING PARENTS:");
+            var res = rootNode.checkChildren();
+            log("RESULT: " + res + "\n\n");
+
 
             log("---end---");
             
@@ -719,7 +724,11 @@ expression
             children.push(new Leaf("LITERAL", ".", node));
             children.push(new Leaf("ID", $ID, node));
             children.push(new Leaf("LITERAL", "(", node));
-            children.push($expression_list.returnFlattenedChildren());
+            var expressions = $expression_list.returnFlattenedChildren();
+            _.each(expressions, function(item) {
+                item.parent = node;
+            });
+            children.push(expressions);
             children.push(new Leaf("LITERAL", ")", node));
             children = _.flatten(children);
             
@@ -1228,7 +1237,11 @@ main_class
             children.push(new Leaf("LITERAL", "{", node));
             if ($statement_list.subtype == 1) {
                 var statement = new Node("STATEMENT", 1, node);
-                statement.setChildren($statement_list.returnFlattenedChildren());
+                var statements = $statement_list.returnFlattenedChildren();
+                _.each(statements, function(item) {
+                    item.parent = statement;
+                });
+                statement.setChildren(statements);
                 //log($statement_list.returnFlattenedChildren());
                 children.push(statement);
             }
@@ -1335,6 +1348,7 @@ class_decl
             var declarations = $var_decl_list.returnFlattenedChildren();
             if (declarations && declarations.length) {
                 _.each(declarations, function(item) {
+                    item.parent = node;
                     children.push(item);
                 });
             }
@@ -1342,6 +1356,7 @@ class_decl
             var methods = $method_decl_list.returnFlattenedChildren();
             if (methods && methods.length) {
                 _.each(methods, function(item) {
+                    item.parent = node;
                     children.push(item);
                 });
             }
