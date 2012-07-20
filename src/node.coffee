@@ -5,6 +5,7 @@ class LocalNode
     @children = []
     @scope = {}
     @desc = ''
+    @type = 'undefined'
     @id = @randomID()
 
   # children
@@ -23,14 +24,19 @@ class LocalNode
 
   # scope
   # -------------------------
-  addVariableToScope: (variableName) ->
-
+  addVariableToScope: (variableName, type, kind) ->
+    if @parent
+      @parent.addVariableToScope variableName, type, kind
     return;
 
   searchForVariableInScope: (variableName) ->
 
     return;
 
+  # type
+  # -------------------------
+  setType: (type) ->
+    @type = type
 
 
   # helpers
@@ -56,6 +62,7 @@ class LocalNode
       'leaf': false
       @id
       @rule
+      @type
       @rule_number
       @scope
       parent: if @parent then @parent.id else 'undefined'
@@ -66,7 +73,7 @@ class LocalNode
     return Math.random().toString(36).substring(2,9)
 
   checkChildren: ->
-    # console.log @id + "\t\t" + @rule
+    # console.log " CHECK   " + @id + "\t\t" + @rule
     
     return true if ! (@children?.length)
     
@@ -79,9 +86,19 @@ class LocalNode
       result &&= child.checkChildren()
     return result
 
-  
   validate: ->
-    return false;
+    return @validateChildren()
+
+  validateChildren: ->
+    console.log "VALIDATING      #{@id}  #{@rule}"
+    
+    return true if ! (@children?.length)
+    
+    for child in @children
+      res = child.validate()
+      console.log "VALIDATE CHILD  #{child.id}  #{child.rule} \t--> #{res}"
+      return false if !res
+    return true
 
 
 
@@ -92,6 +109,7 @@ class LocalNode
 class LocalLeaf extends LocalNode
   constructor: (@rule, @value, @parent) ->
     @desc = "LEAF [ #{rule} : #{value} ]"
+    # @type = @rule
     @id = @randomID()
 
   print: ->
@@ -108,7 +126,7 @@ class LocalLeaf extends LocalNode
     return {
       'leaf': true
       @id
-      @rule
+      @type
       @value
       parent: if @parent then @parent.id else 'undefined'
     }

@@ -89,14 +89,18 @@ id                    [a-zA-Z][a-zA-Z0-9_]*
 
 
 
-// CHECKED 1
+// CHECKED 1 2
 start
     : initializer goal
         {{
             log(JSON.stringify(rootNode.printJSON(), null, 4));
             
-            log("\n\nCHECKING PARENTS:");
-            var res = rootNode.checkChildren();
+            //log("\n\nCHECKING PARENTS:");
+            //var res = rootNode.checkChildren();
+            //log("RESULT: " + res + "\n\n");
+
+            log("\n\nVALIDATING TYPES:");
+            var res = rootNode.validate();
             log("RESULT: " + res + "\n\n");
 
 
@@ -106,7 +110,7 @@ start
         }}
     ;
 
-// CHECKED 1
+// CHECKED 1 2
 initializer
     : '.'
         {{
@@ -123,7 +127,7 @@ initializer
         }}
     ;
 
-// CHECKED 1
+// CHECKED 1 2
 goal
     : main_class class_decl_list EOF
         {{
@@ -137,18 +141,26 @@ goal
             
             rootNode.desc = $main_class.desc + " " + $class_decl_list.desc;
 
+            // scope
+            rootNode.addVariableToScope = function(name, type, kind) {
+                this.scope[name] = {"type": type, "kind": type};
+            }
+
             // CHILDREN
             var children = new Array();
             children[0] = $main_class;
             children[0].parent = rootNode;
+            rootNode.addVariableToScope("main", "class", "class");
 
             var classes = $class_decl_list.returnFlattenedChildren();
             _.each(classes, function(class_decl) {
                 class_decl.parent = rootNode;
                 children.push(class_decl);
+                rootNode.addVariableToScope($class_decl.className, "class", "class");
             });
 
             rootNode.setChildren(children);
+
 
             $$ = rootNode;
         }}
@@ -193,6 +205,7 @@ statement_list /* == (statement)* */
                 return _.flatten(arr);
             };
 
+
             $$ = node;
         }}
     |
@@ -207,6 +220,7 @@ statement_list /* == (statement)* */
             node.returnFlattenedChildren = function() {
                 return [];
             }
+            
 
             $$ = node;
             
@@ -276,6 +290,21 @@ statement
             
             node.setChildren(children);
             
+
+            // VALIDATION
+            node.validate = function() {
+                if ($expression.type !== "boolean") {
+                    var error = "";
+                    error += "if (" + $expression + ");";
+                    error += "\n";
+                    error += "    ^~-- type should be 'boolean'";
+                    log("\n" + error + "\n");
+                    return false;
+                }
+                return this.validateChildren();
+            };
+
+
             $$ = node;
         }}
     | WHILE '(' expression ')' statement
@@ -302,6 +331,21 @@ statement
             children.push($statement);
             
             node.setChildren(children);
+            
+            
+            // VALIDATION
+            node.validate = function() {
+                if ($expression.type !== "boolean") {
+                    var error = "";
+                    error += "while (" + $expression + ") ...";
+                    error += "\n";
+                    error += "        ^~-- type should be 'boolean'";
+                    log("\n" + error + "\n");
+                    return false;
+                }
+                return this.validateChildren();
+            };
+            
 
             $$ = node;
         }}
@@ -328,6 +372,22 @@ statement
             children.push(new Leaf("LITERAL", ";", node));
             
             node.setChildren(children);
+            
+            
+            // VALIDATION
+            node.validate = function() {
+                if ($expression.type !== "int") {
+                    var error = "";
+                    error += "System.out.println(" + $expression + ");";
+                    error += "\n";
+                    error += "                   ^~-- type should be 'int'";
+                    log("\n" + error + "\n");
+                    return false;
+                }
+                return this.validateChildren();
+            };
+
+
 
             $$ = node;
         }}
@@ -354,6 +414,8 @@ statement
             children.push(new Leaf("LITERAL", ";", node));
             
             node.setChildren(children);
+            
+
 
             $$ = node;
             
@@ -386,6 +448,22 @@ statement
             children.push(new Leaf("LITERAL", ";", node));
             
             node.setChildren(children);
+            
+            
+            // VALIDATION
+            node.validate = function() {
+                if ($expression1.type !== "int") {
+                    var error = "";
+                    error += $ID + " [" + $expression1 + "] = ...";
+                    error += "\n";
+                    error += "              ^~-- type should be 'int'";
+                    log("\n" + error + "\n");
+                    return false;
+                }
+                return this.validateChildren();
+            };
+
+
 
             $$ = node;
             
@@ -545,6 +623,25 @@ expression
             children.push($expression2);
             
             node.setChildren(children);
+            
+            if ($expression1.type === "boolean" && $expression2.type === "boolean") {
+                node.type = "boolean";
+            }
+            
+            // VALIDATION
+            node.validate = function() {
+                if (node.type === "undefined") {
+//fix
+                    var error = "";
+                    error += "& exp...";
+                    error += "\n";
+                    error += "              ^~-- type should be 'boolean'";
+                    log("\n" + error + "\n");
+                    return false;
+                }
+                return this.validateChildren();
+            };
+
 
             $$ = node;
         }}
@@ -570,6 +667,25 @@ expression
             children.push($expression2);
             
             node.setChildren(children);
+            
+            if ($expression1.type === "int" && $expression2.type === "int") {
+                node.type = "boolean";
+            }
+            
+            // VALIDATION
+            node.validate = function() {
+                if (node.type === "undefined") {
+//fix
+                    var error = "";
+                    error += "< exp...";
+                    error += "\n";
+                    error += "              ^~-- type should be 'int'";
+                    log("\n" + error + "\n");
+                    return false;
+                }
+                return this.validateChildren();
+            };
+
 
             $$ = node;
             
@@ -596,6 +712,25 @@ expression
             children.push($expression2);
             
             node.setChildren(children);
+            
+            if ($expression1.type === "int" && $expression2.type === "int") {
+                node.type = "int";
+            }
+            
+            // VALIDATION
+            node.validate = function() {
+                if (node.type === "undefined") {
+//fix
+                    var error = "";
+                    error += "+ exp...";
+                    error += "\n";
+                    error += "              ^~-- type should be 'int'";
+                    log("\n" + error + "\n");
+                    return false;
+                }
+                return this.validateChildren();
+            };
+
 
             $$ = node;
             
@@ -622,6 +757,25 @@ expression
             children.push($expression2);
             
             node.setChildren(children);
+            
+            if ($expression1.type === "int" && $expression2.type === "int") {
+                node.type = "int";
+            }
+            
+            // VALIDATION
+            node.validate = function() {
+                if (node.type === "undefined") {
+//fix
+                    var error = "";
+                    error += "- exp...";
+                    error += "\n";
+                    error += "              ^~-- type should be 'int'";
+                    log("\n" + error + "\n");
+                    return false;
+                }
+                return this.validateChildren();
+            };
+
 
             $$ = node;
             
@@ -648,6 +802,25 @@ expression
             children.push($expression2);
             
             node.setChildren(children);
+            
+            if ($expression1.type === "int" && $expression2.type === "int") {
+                node.type = "int";
+            }
+            
+            // VALIDATION
+            node.validate = function() {
+                if (node.type === "undefined") {
+//fix
+                    var error = "";
+                    error += "* exp...";
+                    error += "\n";
+                    error += "              ^~-- type should be 'int'";
+                    log("\n" + error + "\n");
+                    return false;
+                }
+                return this.validateChildren();
+            };
+
 
             $$ = node;
             
@@ -675,6 +848,27 @@ expression
             children.push(new Leaf("LITERAL", "]", node));
             
             node.setChildren(children);
+            
+     
+            if ($expression2.type === "int") {
+//fix
+                node.type = "int";
+            }
+            
+            // VALIDATION
+            node.validate = function() {
+                if (node.type === "undefined") {
+//fix
+                    var error = "";
+                    error += "exp [ exp...";
+                    error += "\n";
+                    error += "              ^~-- type should be 'int'";
+                    log("\n" + error + "\n");
+                    return false;
+                }
+                return this.validateChildren();
+            };
+
 
             $$ = node;
             
@@ -699,6 +893,27 @@ expression
             children.push(new Leaf("LITERAL", "LENGTH", node));
             
             node.setChildren(children);
+            
+
+            if ($expression.type === "int") {
+//fix
+                node.type = "int";
+            }
+            
+            // VALIDATION
+            node.validate = function() {
+                if (node.type === "undefined") {
+//fix
+                    var error = "";
+                    error += "& exp...";
+                    error += "\n";
+                    error += "              ^~-- type should be 'int'";
+                    log("\n" + error + "\n");
+                    return false;
+                }
+                return this.validateChildren();
+            };
+
 
             $$ = node;
             
@@ -733,6 +948,26 @@ expression
             children = _.flatten(children);
             
             node.setChildren(children);
+            
+
+            if ($expression.type) {
+//fix
+                node.type = "int";
+            }
+            
+            // VALIDATION
+            node.validate = function() {
+                if (node.type === "undefined") {
+//fix
+                    var error = "";
+                    error += "& exp...";
+                    error += "\n";
+                    error += "              ^~-- type should be 'int'";
+                    log("\n" + error + "\n");
+                    return false;
+                }
+                return this.validateChildren();
+            };
 
 
             $$ = node;
@@ -749,6 +984,8 @@ expression
 
             node.desc = $INTEGER_LITERAL;
 
+            node.type = "int";
+
             $$ = node;
             
         }}
@@ -763,6 +1000,8 @@ expression
 
             node.desc = "true";
 
+            node.type = "boolean";
+
             $$ = node;
         }}
     | FALSE
@@ -776,6 +1015,8 @@ expression
             
             node.desc = "false";
 
+            node.type = "boolean";
+
             $$ = node;
             
         }}
@@ -787,10 +1028,12 @@ expression
                 log("23) expression ::= ID");
                 log("                    \\__ " + $ID);
                 log();
-            }
-            
+            }      
 
             node.desc = $ID;
+
+            node.type = "????????????";
+//fix
 
             $$ = node;
         }}
@@ -804,6 +1047,9 @@ expression
             }
 
             node.desc = "this";
+
+            node.type = "/?????????????";
+//fix
 
             $$ = node;
             
@@ -829,6 +1075,25 @@ expression
             children.push(new Leaf("LITERAL", "]", node));
             
             node.setChildren(children);
+            
+
+            node.type = "int[]";
+            
+            // VALIDATION
+            node.validate = function() {
+                if ($expression.type !== "int") {
+                    var error = "";
+                    error += "new int[" + $expression + "]";
+                    error += "\n";
+                    error += "            ^~-- type should be 'int'";
+                    log("\n" + error + "\n");
+                    return false;
+                }
+                return this.validateChildren();
+            };
+
+
+
 
             $$ = node;
             
@@ -854,6 +1119,8 @@ expression
             
             node.setChildren(children);
 
+            node.type = "class_instance";
+//fix??
             
             $$ = node;
         }}
@@ -876,6 +1143,25 @@ expression
             children.push($expression);
             
             node.setChildren(children);
+            
+            
+            if ($expression.type === "boolean")
+                node.type = "boolean";
+            
+            // VALIDATION
+            node.validate = function() {
+                if ($expression.type !== "boolean") {
+                    var error = "";
+                    error += "! " + $expression;
+                    error += "\n";
+                    error += "  ^~-- type should be 'boolean'";
+                    log("\n" + error + "\n");
+                    return false;
+                }
+                return this.validateChildren();
+            };
+
+
 
             $$ = node;
         }}
@@ -900,6 +1186,8 @@ expression
             
             node.setChildren(children);
 
+            node.type = $expression.type;
+
             $$ = node;
 
         }}
@@ -917,14 +1205,17 @@ type
     : INT '[' ']'
         {{
             $$ = new Leaf("TYPE", "INT[]");
+            $$.type = "int[]";
         }}
     | BOOLEAN
         {{
             $$ = new Leaf("TYPE", "BOOLEAN");
+            $$.type = "boolean";
         }}
     | INT
         {{
             $$ = new Leaf("TYPE", "INT");
+            $$.type = "int";
         }}
     ;
 
@@ -948,10 +1239,15 @@ type_id
             var children = new Array();
             
             children[0] = new Leaf("TYPE", $ID1, node);
-            
+            children[0].type = $ID1;
+
             children[1] = new Leaf("ID", $ID2, node);
+            children[1].type = $ID1;
 
             node.setChildren(children);
+
+
+            node.type = $ID1;
 
             
             $$ = node;
@@ -974,10 +1270,15 @@ type_id
             
             children[0] = $type;
             children[0].parent = node;
+            children[0].type = $type.type;
             
             children[1] = new Leaf("ID", $ID, node);
+            children[1].type = $type.type;
 
             node.setChildren(children);
+
+
+            node.type = $type.type;
 
             
             $$ = node;
@@ -1100,7 +1401,6 @@ type_id_comma_list
             }
 
             node.returnFlattenedChildren = function() {
-
                 return [];
             };
 
@@ -1195,6 +1495,9 @@ var_decl
 
             node.setChildren(children);
 
+            node.variableType = children[0].type;
+            node.variableName = children[1].value;
+
             $$ = node;
 
         }}
@@ -1203,7 +1506,13 @@ var_decl
 
 
 
-// CHECKED 1
+
+
+
+
+
+
+// CHECKED 1 2
 main_class
     : CLASS ID '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' ID ')' '{' statement_list '}' '}'
         {{
@@ -1250,6 +1559,15 @@ main_class
 
             node.setChildren(children);
             //log('---------statement');log(node);log('---------');log();
+
+            
+
+            // scope
+            node.addVariableToScope = function(name, type, kind) {
+                this.scope[name] = {"type": type, "kind": kind};
+            }
+
+            node.addVariableToScope($ID2, "String[]", "argument");
 
             $$ = node;
         }}
@@ -1345,11 +1663,20 @@ class_decl
             }
             children.push(new Leaf("LITERAL", "{", node));
 
+            // scope
+            node.addVariableToScope = function(name, type, kind) {
+                this.scope[name] = {"type": type, "kind": kind};
+            }
+
+
             var declarations = $var_decl_list.returnFlattenedChildren();
             if (declarations && declarations.length) {
                 _.each(declarations, function(item) {
                     item.parent = node;
                     children.push(item);
+                    
+                    // scope
+                    node.addVariableToScope(item.variableName, item.variableType, "variable");
                 });
             }
             
@@ -1358,6 +1685,9 @@ class_decl
                 _.each(methods, function(item) {
                     item.parent = node;
                     children.push(item);
+                    
+                    // scope
+                    node.addVariableToScope(item.methodName, item.methodType, "method");
                 });
             }
             
@@ -1365,6 +1695,10 @@ class_decl
 
             node.setChildren(children);
             //log('---------class_decl');log(node);log('---------');log();
+
+
+
+
 
             $$ = node;
 
@@ -1477,7 +1811,15 @@ method_decl
                 log();
             }
 
+
+            //scope
+            node.addVariableToScope = function(name, type, kind) {
+                this.scope[name] = {"type": type, "kind": kind};
+            };
+
             node.desc = "public " + $type_id.desc + "(" + $type_id_list.desc + ") { " + $var_decl_list.desc + "   " + $statement_list.desc + "   return (" + $expression.desc + "; }";
+
+
 
             // CHILDREN
             var children = new Array();
@@ -1497,10 +1839,35 @@ method_decl
             // log("\n\n\n");
             // log(types);
             // log("\n\n\n");
+
+            var args_list = new Array();
             _.each(types, function(item) {
                 item.parent = node;
                 children.push(item);
+                if (item.value !== ",")
+                    args_list.push(item.value);
             });
+
+            var i = 0;
+            var args = [];
+            _.each(args_list, function(item) {
+                if (i%2 == 0) {
+                    if (!args[i])
+                        args[i] = {}
+                    args[i].type = item;
+                    i++;
+                } else {
+                    args[i-1].name = item;
+                    i++;
+                }
+            });
+
+            node.args = _.flatten(args);
+
+            _.each(args, function(item) {
+                node.addVariableToScope(item.name, item.type, "argument");
+            });
+
             
             children.push(new Leaf("LITERAL", ")", node));
             
@@ -1510,6 +1877,7 @@ method_decl
             _.each(variables, function(item) {
                 item.parent = node;
                 children.push(item);
+                node.addVariableToScope(item.variableName, item.variableType, "variable");
             });
             
             var statements = $statement_list.returnFlattenedChildren();
@@ -1545,6 +1913,10 @@ method_decl
             // log("-------------")
             // log(node);
             // log("-------------\n\n")
+
+            node.methodType = type.value;
+            node.methodName = id.value;
+
 
             $$ = node;
 
