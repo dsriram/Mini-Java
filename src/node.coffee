@@ -63,10 +63,13 @@ class LocalNode
     }
 
   randomID: ->
-    return Math.random().toString(36).substring(10)
+    return Math.random().toString(36).substring(2,9)
 
   checkChildren: ->
+    # console.log @id + "\t\t" + @rule
+    
     return true if ! (@children?.length)
+    
     result = true
     for child in @children
       # console.log "CHECKED " + child.id

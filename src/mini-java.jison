@@ -1014,7 +1014,7 @@ type_id_list
 
             node.returnFlattenedChildren = function() {
                 var arr = new Array();
-                arr[0] = children[0];
+                arr[0] = children[0].children;
                 arr[2] = children[2].returnFlattenedChildren();
                 if (arr[2].length) {
                     arr[1] = children[1];
@@ -1075,7 +1075,7 @@ type_id_comma_list
 
             node.returnFlattenedChildren = function() {
                 var arr = new Array();
-                arr[0] = children[0];
+                arr[0] = children[0].children;
                 arr[2] = children[2].returnFlattenedChildren();
                 if (arr[2].length) {
                     arr[1] = children[1];
@@ -1494,6 +1494,9 @@ method_decl
             children.push(new Leaf("LITERAL", "(", node));
             
             var types = $type_id_list.returnFlattenedChildren();
+            // log("\n\n\n");
+            // log(types);
+            // log("\n\n\n");
             _.each(types, function(item) {
                 item.parent = node;
                 children.push(item);
