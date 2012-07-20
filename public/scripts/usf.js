@@ -92,7 +92,9 @@ function processGrammar () {
               try{
                 var parseResult = miniJava.parse(tmp);
                 var root=parseResult.root_node.printD3();
-                $("#logs_content").html(parseResult.log);
+                var plogs=parseResult.log;
+                plogs.replace('\n','<br/>');
+                $("#logs_content").html(plogs);
                 doD3(root);
               } catch(e) {
                  // printOut(e.message || e);
