@@ -30,21 +30,33 @@ class LocalNode
     return;
 
   searchForVariableInScope: (variableName) ->
-
-    return;
+    inMyScope = @scope?[variableName]
+    if !inMyScope
+      if @parent
+        return @parent.searchForVariableInScope variableName
+      else
+        return {};
+    return inMyScope;
 
   # type
   # -------------------------
   setType: (type) ->
     @type = type
+    return
+
+  resolveType: () ->
+    return
 
 
   # helpers
   # -------------------------
   print: ->
+    @resolveType()
     return;
 
   printAbbrevJSON: ->
+    @resolveType()
+    
     if @children && @children.length
       childrenJSON = (child.printAbbrevJSON() for child in @children)
     
@@ -55,6 +67,7 @@ class LocalNode
     }
 
   printJSON: ->
+    @resolveType()
     if @children && @children.length
       childrenJSON = (child.printJSON() for child in @children)
     
@@ -87,6 +100,7 @@ class LocalNode
     return result
 
   validate: ->
+    @resolveType()
     return @validateChildren()
 
   validateChildren: ->
@@ -95,6 +109,7 @@ class LocalNode
     return true if ! (@children?.length)
     
     for child in @children
+      child.resolveType()
       res = child.validate()
       console.log "VALIDATE CHILD  #{child.id}  #{child.rule} \t--> #{res}"
       return false if !res
@@ -113,9 +128,11 @@ class LocalLeaf extends LocalNode
     @id = @randomID()
 
   print: ->
+    @resolveType()
     console.log @desc;
 
   printAbbrevJSON: ->
+    @resolveType()
     return {
       'leaf': true
       @rule
@@ -123,6 +140,7 @@ class LocalLeaf extends LocalNode
     }
 
   printJSON: ->
+    @resolveType()
     return {
       'leaf': true
       @id

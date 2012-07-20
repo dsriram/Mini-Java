@@ -1,9 +1,21 @@
-class Factorial {
+class one {
   public static void main(String[] args) {
-    if (true) {
-      System.out.println(new Fact().ComputeFac(10,11,12));
-    } else {
-      args[0] = this.length;
+  }
+}
+class two {
+  int x;
+  int y;
+  int[] z;
+
+  public int[] fun() {
+    {
+      y = z;
+      z = this.fun();
+      if (1<2+2)
+        System.out.println(1);
+      else 
+        System.out.println(2);
     }
+    return z;
   }
 }

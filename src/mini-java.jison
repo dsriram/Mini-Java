@@ -65,14 +65,14 @@ id                    [a-zA-Z][a-zA-Z0-9_]*
 /* operator associations and precedence */
 
 /* TODO: FIXME!!! */
-%left '+' '-'
-%left '*' '/'
+%left '!'
+%left '&'
 %left '<'
 %left '['
-%left '.'
 %left '='
-%right '!'
-%right '&'
+%left '.'
+%left '+' '-'
+%left '*' '/'
 
 
 
@@ -293,6 +293,7 @@ statement
 
             // VALIDATION
             node.validate = function() {
+                $expression.resolveType();
                 if ($expression.type !== "boolean") {
                     var error = "";
                     error += "if (" + $expression + ");";
@@ -335,6 +336,7 @@ statement
             
             // VALIDATION
             node.validate = function() {
+                $expression.resolveType();
                 if ($expression.type !== "boolean") {
                     var error = "";
                     error += "while (" + $expression + ") ...";
@@ -376,6 +378,7 @@ statement
             
             // VALIDATION
             node.validate = function() {
+                $expression.resolveType();
                 if ($expression.type !== "int") {
                     var error = "";
                     error += "System.out.println(" + $expression + ");";
@@ -414,6 +417,26 @@ statement
             children.push(new Leaf("LITERAL", ";", node));
             
             node.setChildren(children);
+
+
+            node.type = "unknown";
+
+
+            node.validate = function() {
+                this.resolveType();
+                return this.validateChildren();
+            };
+
+            
+
+            node.resolveType = function() {
+                var id_type = this.searchForVariableInScope($ID);
+                if (id_type)
+                    id_type = id_type["type"];
+
+                $expression.resolveType();
+                this.type = $expression.type;;
+            };
             
 
 
@@ -452,6 +475,8 @@ statement
             
             // VALIDATION
             node.validate = function() {
+                $expression1.resolveType();
+                $expression2.resolveType();
                 if ($expression1.type !== "int") {
                     var error = "";
                     error += $ID + " [" + $expression1 + "] = ...";
@@ -624,14 +649,20 @@ expression
             
             node.setChildren(children);
             
-            if ($expression1.type === "boolean" && $expression2.type === "boolean") {
-                node.type = "boolean";
+            node.type = "unknown";
+
+            node.resolveType = function() {
+                $expression1.resolveType();
+                $expression2.resolveType();
+                if ($expression1.type === "boolean" && $expression2.type === "boolean") {
+                    node.type = "boolean";
+                }
             }
+            
             
             // VALIDATION
             node.validate = function() {
                 if (node.type === "undefined") {
-//fix
                     var error = "";
                     error += "& exp...";
                     error += "\n";
@@ -668,14 +699,21 @@ expression
             
             node.setChildren(children);
             
-            if ($expression1.type === "int" && $expression2.type === "int") {
-                node.type = "boolean";
+
+            node.type = "unknown";
+
+            node.resolveType = function() {
+                $expression1.resolveType();
+                $expression2.resolveType();
+                if ($expression1.type === "int" && $expression2.type === "int") {
+                    node.type = "boolean";
+                }
             }
             
             // VALIDATION
             node.validate = function() {
+                this.resolveType();
                 if (node.type === "undefined") {
-//fix
                     var error = "";
                     error += "< exp...";
                     error += "\n";
@@ -713,14 +751,19 @@ expression
             
             node.setChildren(children);
             
-            if ($expression1.type === "int" && $expression2.type === "int") {
-                node.type = "int";
+            node.type = "unknown";
+
+            node.resolveType = function() {
+                $expression1.resolveType();
+                $expression2.resolveType();
+                if ($expression1.type === "int" && $expression2.type === "int") {
+                    node.type = "int";
+                }
             }
-            
+
             // VALIDATION
             node.validate = function() {
                 if (node.type === "undefined") {
-//fix
                     var error = "";
                     error += "+ exp...";
                     error += "\n";
@@ -758,14 +801,19 @@ expression
             
             node.setChildren(children);
             
-            if ($expression1.type === "int" && $expression2.type === "int") {
-                node.type = "int";
+            node.type = "unknown";
+
+            node.resolveType = function() {
+                $expression1.resolveType();
+                $expression2.resolveType();
+                if ($expression1.type === "int" && $expression2.type === "int") {
+                    node.type = "int";
+                }
             }
             
             // VALIDATION
             node.validate = function() {
                 if (node.type === "undefined") {
-//fix
                     var error = "";
                     error += "- exp...";
                     error += "\n";
@@ -803,14 +851,20 @@ expression
             
             node.setChildren(children);
             
-            if ($expression1.type === "int" && $expression2.type === "int") {
-                node.type = "int";
+            node.type = "unknown";
+
+            node.resolveType = function() {
+                $expression1.resolveType();
+                $expression2.resolveType();
+                if ($expression1.type === "int" && $expression2.type === "int") {
+                    node.type = "int";
+                }
             }
+            
             
             // VALIDATION
             node.validate = function() {
                 if (node.type === "undefined") {
-//fix
                     var error = "";
                     error += "* exp...";
                     error += "\n";
@@ -850,13 +904,22 @@ expression
             node.setChildren(children);
             
      
-            if ($expression2.type === "int") {
-//fix
-                node.type = "int";
-            }
+            node.type = "unknown";
+
+            node.resolveType = function() {
+                $expression1.resolveType();
+                $expression2.resolveType();
+
+                if ($expression2.type === "int") {
+                    this.type = "I DONT KNOW";
+// fix
+                }
+
+            };
             
             // VALIDATION
             node.validate = function() {
+                /*
                 if (node.type === "undefined") {
 //fix
                     var error = "";
@@ -866,6 +929,7 @@ expression
                     log("\n" + error + "\n");
                     return false;
                 }
+                */
                 return this.validateChildren();
             };
 
@@ -894,23 +958,32 @@ expression
             
             node.setChildren(children);
             
+     
+            node.type = "unknown";
 
-            if ($expression.type === "int") {
-//fix
-                node.type = "int";
-            }
+            node.resolveType = function() {
+                $expression.resolveType();;
+
+                //if ($expression.type === "int") {
+                    this.type = "int";
+// fix
+                //}
+
+            };
             
             // VALIDATION
             node.validate = function() {
+                /*
                 if (node.type === "undefined") {
 //fix
                     var error = "";
-                    error += "& exp...";
+                    error += "exp . length";
                     error += "\n";
-                    error += "              ^~-- type should be 'int'";
+                    error += "           ^~-- type should be 'int'";
                     log("\n" + error + "\n");
                     return false;
                 }
+                */
                 return this.validateChildren();
             };
 
@@ -948,25 +1021,16 @@ expression
             children = _.flatten(children);
             
             node.setChildren(children);
-            
 
-            if ($expression.type) {
-//fix
-                node.type = "int";
-            }
-            
-            // VALIDATION
-            node.validate = function() {
-                if (node.type === "undefined") {
-//fix
-                    var error = "";
-                    error += "& exp...";
-                    error += "\n";
-                    error += "              ^~-- type should be 'int'";
-                    log("\n" + error + "\n");
-                    return false;
-                }
-                return this.validateChildren();
+            node.methodName = $ID;
+
+
+            node.type = "unknown";
+
+            node.resolveType = function() {
+                var entry = this.searchForVariableInScope(this.methodName);
+                if (entry.kind === "method")
+                    this.type = entry.type;
             };
 
 
@@ -1032,8 +1096,12 @@ expression
 
             node.desc = $ID;
 
-            node.type = "????????????";
-//fix
+            node.type = "unknown";
+
+            node.resolveType = function() {
+                var entry = this.searchForVariableInScope($ID);
+                this.type = entry.type;
+            };
 
             $$ = node;
         }}
@@ -1048,8 +1116,13 @@ expression
 
             node.desc = "this";
 
-            node.type = "/?????????????";
-//fix
+            node.type = "unknown";
+
+            node.resolveType = function() {
+                var entry = this.searchForVariableInScope("this");
+                if (entry.kind === "class")
+                    this.type = entry.type;
+            };
 
             $$ = node;
             
@@ -1119,8 +1192,17 @@ expression
             
             node.setChildren(children);
 
-            node.type = "class_instance";
-//fix??
+
+            node.type = "unknown";
+
+            node.validate = function() {
+//fix
+            };
+
+
+            node.resolveType = function() {
+//fix
+            };
             
             $$ = node;
         }}
@@ -1145,6 +1227,8 @@ expression
             node.setChildren(children);
             
             
+            node.type = "unknown";
+
             if ($expression.type === "boolean")
                 node.type = "boolean";
             
@@ -1204,17 +1288,17 @@ expression
 type
     : INT '[' ']'
         {{
-            $$ = new Leaf("TYPE", "INT[]");
+            $$ = new Leaf("TYPE", "int[]");
             $$.type = "int[]";
         }}
     | BOOLEAN
         {{
-            $$ = new Leaf("TYPE", "BOOLEAN");
+            $$ = new Leaf("TYPE", "boolean");
             $$.type = "boolean";
         }}
     | INT
         {{
-            $$ = new Leaf("TYPE", "INT");
+            $$ = new Leaf("TYPE", "int");
             $$.type = "int";
         }}
     ;
@@ -1568,6 +1652,7 @@ main_class
             }
 
             node.addVariableToScope($ID2, "String[]", "argument");
+            node.addVariableToScope("this", "class", "class");
 
             $$ = node;
         }}
@@ -1695,8 +1780,9 @@ class_decl
 
             node.setChildren(children);
             //log('---------class_decl');log(node);log('---------');log();
+            
 
-
+            node.addVariableToScope("this", "class", "class");
 
 
 

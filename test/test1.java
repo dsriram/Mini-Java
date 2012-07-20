@@ -1,22 +1,19 @@
 class Factorial {
     public static void main(String[] args) {
         System.out.println(1);
-        System.out.println(new Fact().ComputeFac(10,11,12).fun().length);
-        if (true)
+        if (1<2 && true)
             alpha = b;
         else {
-            a = b-2;
-            b = a+2;
-            c = a+2;
-            {
-                x = a.length;
-                y[1+2*4] = a+2 - 1 - 2 * 3;
-            }
+            System.out.println(1+2);
         }
     }
 }
 
 class Fact extends AnotherClass {
+    public int func() {
+        return 0;
+    }
+
     public int ComputeFac(int num) {
         int num_aux;
         booleana yy_var;
@@ -24,7 +21,7 @@ class Fact extends AnotherClass {
         int[] yy_var3;
         
         ff = new int[10];
-        fg = true[true];
+        fg = true[2];
         fg[1] = 2-3;
         
         if (num < 1)
@@ -34,13 +31,13 @@ class Fact extends AnotherClass {
             num_aux2 = num * (this.ComputeFac(num-1));
         }
         num_aux3 = num * (this.ComputeFac(num-1));
-        while (num.length)
-            if (x)
+        while (this.length < 0)
+            if (num_aux < num)
                 num_aux4 = num * (this.ComputeFac(num-1));
             else
                 y = 1;
         
-        System.out.println(this.func(2));
+        System.out.println(this.func(222));
 
         return num_aux;
     }
@@ -64,6 +61,15 @@ class Fact3 extends Fact {
         return 0;
     }
     public some_type method3() {
+        int zzz;
+        zzz = this.method1();
+        return 0;
+    }
+}
+
+
+class Fact4 extends Fact3 {
+    public int method1() {
         return 0;
     }
 }
