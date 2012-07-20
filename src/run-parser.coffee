@@ -17,7 +17,7 @@ parser = new Parser grammar, {type:types['LALR(1)']}
 
 parserSource = parser.generate()
 
-res = parser.parse '.' + (fs.readFileSync '../test/test18.java', 'UTF8')
+res = parser.parse '.' + (fs.readFileSync '../test/test09.java', 'UTF8')
 
 console.log res.log 
 # console.log JSON.stringify(res.root_node.printD3(), null, 4)

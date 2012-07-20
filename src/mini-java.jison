@@ -115,9 +115,8 @@ initializer
     : '.'
         {{
             output_log = "";
-            log = console.log;/*function(message) {
-                output_log += message + "\n";
-            }*/
+            // log = console.log;
+            log = function(message) { output_log += message + "\n"; }
 
             console.log("--start--");
             
