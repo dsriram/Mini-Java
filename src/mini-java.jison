@@ -1126,6 +1126,7 @@ expression
             
             // VALIDATION
             node.validate = function() {
+                $expression.resolveType();
                 if ($expression.type !== "int") {
                     var error = "";
                     error += "new int[" + $expression + "]";
