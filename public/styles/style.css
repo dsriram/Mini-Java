@@ -89,7 +89,7 @@ a:hover {
   color: #999;
 }
 #tooltip{
-  width:10em;
+  width:15em;
 
   opacity: 0.85;
   -moz-opacity: 0.85;
@@ -108,7 +108,6 @@ a:hover {
 
   text-align:center;
   visibility: hidden;
-  padding: 2px 2px 2px 2px;
 }
 
 .node circle {

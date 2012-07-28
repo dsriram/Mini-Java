@@ -46,15 +46,15 @@ function doD3(root){
 }
 function getTooltip(d){
   var tmp="<ul>";
-  tmp+="<li>Name: "+d.name+"</li>";
-  tmp+="<li>Type: "+d.type+"</li>";
-  tmp+="<li>Scope";
+  tmp+="<li><h3>Name: </h3>"+d.name+"</li>";
+  tmp+="<br><li><h3>Type: </h3>"+d.type+"</li>";
+  tmp+="<br><li><h3>Scope:</h3>";
   tmp+="<ul>";
   for(s in d.scope){
     se = d.scope[s];
-    tmp+="<li>"+s+"<ul>";
-    tmp+="<li>Type: "+se.type+"<li>";
-    tmp+="<li>Kind: "+se.kind+"<li>";
+    tmp+="<li style='color:green'><u>" + s + "</u><ul>";
+    tmp+="<li style='color:black'><b>Type: </b>" + se.type + "<li>";
+    tmp+="<li style='color:black'><b>Kind: </b>" + se.kind + "<li>";
     tmp+="</ul></li>";
   }
   tmp+="</ul></li>";

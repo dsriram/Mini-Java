@@ -1,12 +1,6 @@
 var parser,
     parser2;
 
-// if(typeof console === 'undefined'){
-//     console = {};
-//     console.log = function(str){document.getElementById("logs_content").value = uneval(str)};
-// }
-// var printOut = function(str){document.getElementById("logs_content").value = JSON.stringify(str)};
-
 
 $(function () {
 
@@ -15,6 +9,8 @@ $(function () {
 
     $("#process_btn").click(processGrammar);
     $("#parse_btn").click(runParser);
+    
+    $("#code_uploader").focus();
 
     $(".action, .state").live("click", function (ev){
       if (!$(ev.target).is("a"))
@@ -88,13 +84,19 @@ function processGrammar () {
             var reader = new FileReader();
             reader.readAsText(file, "UTF-8");
             reader.onload = function (evt) {
-              var tmp = "."+evt.target.result;
+              var file_contents = "."+evt.target.result;
               try{
-                var parseResult = miniJava.parse(tmp);
-                var root=parseResult.root_node.printD3();
-                var plogs=parseResult.log;
-                plogs.replace('\n','<br/>');
+                var parseResult = miniJava.parse(file_contents);
+                var root = parseResult.root_node.printD3();
+                var plogs = parseResult.log;
+                plogs = plogs.replace(/\n/g,'<br>');
                 $("#logs_content").html(plogs);
+
+                var indented_file_contents = file_contents.replace(/\n/g, '<br>').replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;').replace(/\s/g, '&nbsp;');
+                $("#code").html(indented_file_contents.substring(1));
+                prettyPrint();
+                $("#body").html("");
+
                 doD3(root);
               } catch(e) {
                  // printOut(e.message || e);
