@@ -24,7 +24,9 @@
 <body>
 <div id="wrapper">
 	<h1>Mini Java Project<small>By Pooria Azimi &amp; Salim Malakouti</small></h1>
-	<div style="margin-top:50px; padding:20px 20px 20px 400px; background-color:#EEE; border-style:solid; border-width: 1px 0px 1px 0px; " >Upload your program and click on "Parse it!"
+	<div style="margin-top:50px; padding:20px 20px 20px 400px; background-color:#EEE; border-style:solid; border-width: 1px 0px 1px 0px; " >
+		<b>Select your program and click on "Parse it!"</b>
+		<br>You can download some samples from <a style="color:red" href="https://github.com/pooriaazimi/Mini-Java/tree/master/test">here</a>.
 		
 		<!-- Parser type: -->
 		<select id="type" style="display:none">
@@ -46,12 +48,12 @@
 				<li><a href="#" title="productions" >Productions</a></li>
 				<li><a href="#" title="table">Table</a></li>
 				<li><a href="#" title="logs">Logs</a></li>
-				<li><a href="#" title="about_us">About us</a></li>
+				<li><a href="#" title="about_us">About</a></li>
 			</ul>
 		</div>
 	
 		<div class="main" id="ast">
-			<h3 id="main_title">Code &amp; AST</h3>
+			<h3 id="main_title">Code &amp; Abstract Syntax Tree</h3>
 			<pre id="code" class="prettyprint linenums:1 lang-java" style="width:90%; margin-left:5%; margin-top:20px; margin-bottom:20px;"></pre>
 			<div id="body" class="main_content" style="width:90%; margin-left:5%; margin-top:20px; margin-bottom:20px;">
 				Parse your file in order to see the results	</div>
@@ -80,9 +82,18 @@
 			</div>
 		
 		<div class="main" id="about_us">
-			<h3 id="main_title">About us</h3>
+			<h3 id="main_title">About</h3>
 			<div class="main_content" style="width:90%; margin-left:5%; margin-top:20px; margin-bottom:20px;">
-				This Project was implemented by Pooria Azimi and Salim Malakouti.</div>			
+				This Project was implemented by Pooria Azimi and Salim Malakouti as an assignment for a compiler course.
+				<br>
+				Grammar parser generator: <a style="color:red" href="http://zaach.github.com/jison/">Jison</a>
+				<br>
+				AST was built using <a style="color:red" href="http://d3js.org">d3</a> javaScript library.
+				<br>
+				Syntax highlighting using <a style="color:red" href="http://code.google.com/p/google-code-prettify/">Google Code Prettify</a>. Theme: <a style="color:red" href="http://codetunnel.com/blog/post/71/google-code-prettify-sons-of-obsidian-theme">Sons of Obsidian</a>
+				<br><br>
+				The complete source code is available at <a style="color:red" href="https://github.com/pooriaazimi/Mini-Java">GitHub</a>.
+			</div>			
 			</div>
 
 	</div>
