@@ -11,35 +11,35 @@
 }
 .kwd
 {
-    color: #93C763;
+    color: #127b39;
 }
 .com
 {
-    color: #66747B;
+    color: #4c575c;
 }
 .typ
 {
-    color: #678CB1;
+    color: #ad0050;
 }
 .lit
 {
-    color: #FACD22;
+    color: #bd6c26;
 }
 .pun
 {
-    color: #F1F2F3;
+    color: #616262;
 }
 .pln
 {
-    color: #F1F2F3;
+    color: #6f7070;
 }
 .tag
 {
-    color: #8AC763;
+    color: #416441;
 }
 .atn
 {
-    color: #E0E2E4;
+    color: #2f2f30;
 }
 .atv
 {
@@ -60,16 +60,15 @@ ol.linenums
     margin-bottom: 0;
 }
 .prettyprint {
-    background: #000;
 }
 li.L0, li.L1, li.L2, li.L3, li.L4, li.L5, li.L6, li.L7, li.L8, li.L9
 {
-    color: #555;
+    color: #555555;
     padding:2px;
     list-style-type: decimal;
 }
 li.L1, li.L3, li.L5, li.L7, li.L9 {
-    background: #111;
+    background: #e8e8e8;
 }
 @media print
 {

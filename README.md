@@ -11,7 +11,7 @@ Grammar parser generator is [Jison](http://zaach.github.com/jison).
 AST was built using [d3](http://d3js.org) javaScript library.
 
 
-Syntax highlighting using [Google Code Prettify](http://code.google.com/p/google-code-prettify/). Theme: [Sons of Obsidian](http://codetunnel.com/blog/post/71/google-code-prettify-sons-of-obsidian-theme).
+Syntax highlighting using [Google Code Prettify](http://code.google.com/p/google-code-prettify/). 
 
 ---
 

@@ -67,6 +67,6 @@ a { outline:none; }
 /* header with a text-shadow */
 .main h3 { text-transform:uppercase; padding:20px 0 0 20px; color:#555; text-shadow: #000 0px 0px 2px; }
 .main p { padding-bottom:20px; color:#333; }
-#ast{
+#about_us{
 	display: block;
 }

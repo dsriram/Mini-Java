@@ -92,11 +92,21 @@ function processGrammar () {
                 plogs = plogs.replace(/\n/g,'<br>');
                 $("#logs_content").html(plogs);
 
-                var indented_file_contents = file_contents.replace(/\n/g, '<br>').replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;').replace(/\s/g, '&nbsp;');
-                $("#code").html(indented_file_contents.substring(1));
-                prettyPrint();
-                $("#body").html("");
 
+
+          
+                $("#menu a").attr("class", "")
+                $("#menu a[title='ast']").attr("class", "active")
+                
+                $("#code div").html("");
+                $("#body").html("");
+                $("#ast").css("display", "block");
+                $("#about_us").css("display", "none");
+
+                var indented_file_contents = file_contents.replace(/\n/g, '<br>').replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;').replace(/\s/g, '&nbsp;');
+                $("#source").html(indented_file_contents.substring(1));
+                prettyPrint();
+              
                 doD3(root);
               } catch(e) {
                  // printOut(e.message || e);
@@ -126,7 +136,7 @@ function runParser () {
 }
 
 function nonterminalInfo (p){
-    var out = ["<h3>Nonterminals</h3><dl>"];
+    var out = ["<dl>"];
     for(var nt in p.nonterminals){
         out.push("<dt>",nt,"</dt>");
         out.push("<dd>", "nullable: "+(p.nonterminals[nt].nullable ? 'Yes':'No')+"<br/>firsts: "+p.nonterminals[nt].first+"<br/>follows: "+p.nonterminals[nt].follows);
@@ -137,7 +147,7 @@ function nonterminalInfo (p){
         out.push("</p></dd>");
     }
     out.push("</dl>");
-    $("#nonterminals").html(out.join("\n"));
+    $("#nonterminals div").html(out.join("\n"));
 }
 
 function productions (p){
@@ -146,7 +156,7 @@ function productions (p){
             out.push("<li id='prod_"+prod.id+"'>", prod, "</li>");
             });
     out.push('</ol>');
-    $("#productions").html("<h3>Productions</h3>"+out.join(""));
+    $("#productions div").html(out.join(""));
 }
 
 
@@ -277,7 +287,7 @@ function lrTable (p){
 
     out.push('</table>');
 
-    $("#table").html("<h3>"+parser.type+" Parse Table</h3><p>Click cells to show details</p>"+out.join(""));
+    $("#table div").html("<h4>"+parser.type+" Parse Table</h4><p>Click on cells to show details</p>"+out.join(""));
 
     p.resolutions.forEach(function (res){
       var r = res[2];
